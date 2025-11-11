@@ -103,6 +103,24 @@ p {
     line-height: 1.6;
 }
 
+.social-links {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.social-links a {
+    color: #ffffff;
+    font-size: 2em;
+    margin: 0 10px;
+    transition: color 0.3s, transform 0.3s;
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    color: #ff006e;
+    transform: scale(1.2);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     iframe {
