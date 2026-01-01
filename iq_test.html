@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IQ Examiner</title>
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(120deg,#1e3c72,#2a5298);
+  color:#fff;
+  text-align:center;
+}
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+.card{
+  background:rgba(255,255,255,0.12);
+  padding:25px;
+  border-radius:12px;
+  animation:fade 0.6s ease;
+}
+.option{
+  margin:10px auto;
+  padding:12px;
+  width:80%;
+  background:rgba(255,255,255,0.18);
+  border-radius:8px;
+  cursor:pointer;
+  transition:transform .2s,background .2s;
+}
+.option:hover{
+  transform:scale(1.03);
+  background:rgba(0,255,255,0.4);
+}
+@keyframes fade{
+  from{opacity:0;transform:translateY(15px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.loader{
+  width:120px;
+  height:120px;
+  border:10px solid rgba(255,255,255,.3);
+  border-top:10px solid #00ffff;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin:30px auto;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+footer{margin-top:30px;opacity:.7;}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>IQ Examiner</h1>
+<p>😵😵😵😵😵😵</p>
+<div id="app" class="card"></div>
+<footer>Developed by <b>ayushx</b></footer>
+</div>
+
+<script>
+const bank = [
+{q:"How many times can you subtract 1 from 10?",o:["10","Once","Infinite","9"],a:1},
+{q:"Which month has 28 days?",o:["February","Only leap year","All","None"],a:2},
+{q:"If you overtake second place, what position are you in?",o:["First","Second","Third","Last"],a:1},
+{q:"Which is heavier?",o:["1kg iron","1kg cotton","Iron","Cotton"],a:1},
+{q:"What comes next: O T T F F S ?",o:["E","S","T","O"],a:1},
+{q:"A farmer has 17 sheep, all but 9 die. How many left?",o:["8","9","17","None"],a:1},
+{q:"How many sides does a circle have?",o:["0","1","2","Infinite"],a:3},
+{q:"What gets wetter the more it dries?",o:["Towel","Rain","Water","Cloth"],a:0},
+{q:"If today is Monday, what day was it yesterday?",o:["Sunday","Monday","Tuesday","Friday"],a:0},
+{q:"Which number is odd one out: 2,3,5,11,14?",o:["2","11","14","5"],a:2},
+
+{q:"What breaks but never falls?",o:["Glass","Night","Day","Promise"],a:1},
+{q:"Which word is spelled incorrectly in dictionary?",o:["Incorrectly","Wrong","Error","False"],a:0},
+{q:"How many letters in English alphabet?",o:["26","24","25","Depends"],a:3},
+{q:"If A>B and B>C, then C>A?",o:["Yes","No","Sometimes","Always"],a:1},
+{q:"What has a head and tail but no body?",o:["Snake","Coin","Road","Bottle"],a:1},
+{q:"Which number comes next: 1,4,9,16?",o:["20","24","25","30"],a:2},
+{q:"What runs but never walks?",o:["River","Dog","Clock","Wind"],a:0},
+{q:"Which has more value?",o:["₹50+₹20","₹100","₹70","Equal"],a:3},
+{q:"How many zeros in one thousand?",o:["2","3","4","1"],a:1},
+{q:"What can travel around world while staying in corner?",o:["Stamp","Sun","Moon","Cloud"],a:0},
+
+{q:"Which is always in front of you but unseen?",o:["Air","Future","Past","Shadow"],a:1},
+{q:"Which letter comes next: A,C,F,J ?",o:["M","N","O","L"],a:0},
+{q:"If 5 cats catch 5 rats in 5 minutes, 1 cat catches?",o:["1 rat","5 rats","0","Depends"],a:0},
+{q:"Which has keys but no locks?",o:["Door","Keyboard","Map","House"],a:1},
+{q:"How many minutes in half an hour?",o:["15","20","30","60"],a:2},
+{q:"Which is correct: 2+2×2?",o:["6","8","4","10"],a:0},
+{q:"Which comes once in a minute, twice in a moment?",o:["M","O","E","T"],a:0},
+{q:"What is always coming but never arrives?",o:["Tomorrow","Bus","Rain","Night"],a:0},
+{q:"Which has one eye but can’t see?",o:["Needle","Storm","Cyclone","Blind"],a:0},
+{q:"Which is not a prime number?",o:["2","3","5","9"],a:3},
+
+{q:"How many letters in word ‘seven’?",o:["5","4","7","Depends"],a:0},
+{q:"Which is lighter?",o:["Feather","Iron","Both same","Air"],a:2},
+{q:"Which shape has most sides?",o:["Circle","Triangle","Square","Hexagon"],a:0},
+{q:"What comes after 999?",o:["1000","9999","100","Depends"],a:0},
+{q:"Which is always correct?",o:["This sentence","Nothing","Everything","None"],a:3},
+{q:"What has legs but doesn’t walk?",o:["Table","Dog","Man","Chair"],a:0},
+{q:"Which can fill a room but takes no space?",o:["Light","Water","Air","Sound"],a:0},
+{q:"Which is faster?",o:["Light","Sound","Wind","Thought"],a:3},
+{q:"Which is never late?",o:["Clock","Time","Train","Sun"],a:1},
+{q:"How many alphabets in English word ‘alphabet’?",o:["8","9","10","Depends"],a:1},
+
+{q:"What has many teeth but can’t bite?",o:["Comb","Dog","Saw","Zipper"],a:0},
+{q:"What goes up but never comes down?",o:["Age","Smoke","Rain","Sun"],a:0},
+{q:"Which is always behind you?",o:["Past","Future","Shadow","Thought"],a:0},
+{q:"Which has ring but no finger?",o:["Phone","Tree","Bell","Key"],a:1},
+{q:"Which comes at end of life?",o:["E","Death","Z","Time"],a:0},
+{q:"What is full of holes but holds water?",o:["Sponge","Bottle","Cup","Net"],a:0},
+{q:"Which is sharper?",o:["Knife","Mind","Blade","Needle"],a:1},
+{q:"Which weighs nothing?",o:["Shadow","Air","Light","Thought"],a:3},
+{q:"What has face but no eyes?",o:["Clock","Mask","Coin","Mirror"],a:0},
+{q:"Which is always moving but still?",o:["Time","Stone","Road","Chair"],a:0}
+];
+
+// shuffle & select 10
+bank.sort(()=>Math.random()-0.5);
+const questions = bank.slice(0,10);
+
+let i=0, score=0;
+const app=document.getElementById("app");
+
+function showQ(){
+  const q=questions[i];
+  app.innerHTML=`<h2>Q${i+1}</h2><p>${q.q}</p>`;
+  q.o.forEach((op,idx)=>{
+    const d=document.createElement("div");
+    d.className="option";
+    d.textContent=op;
+    d.onclick=()=>choose(idx);
+    app.appendChild(d);
+  });
+}
+function choose(x){
+  if(x===questions[i].a) score++;
+  i++;
+  i<10?showQ():loading();
+}
+function loading(){
+  app.innerHTML=`<h2>Evaluating IQ</h2><div class="loader"></div><p>Analyzing brain patterns…</p>`;
+  setTimeout(result,3000);
+}
+function result(){
+  let tier,id;
+  if(score<=2){tier="🪨 Stone Mind";id="IQ-ID 001";}
+  else if(score<=5){tier="📘 Average Thinker";id="IQ-ID 250";}
+  else if(score<=8){tier="🧠 Sharp Brain";id="IQ-ID 500";}
+  else{tier="🚀 Galaxy Brain";id="IQ-ID 999";}
+  app.innerHTML=`<h2>Result</h2><p>Score: ${score}/10</p><h3>${tier}</h3><p>${id}</p>`;
+}
+showQ();
+</script>
+</body>
+</html>
