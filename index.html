@@ -7,6 +7,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <audio id="bgMusic" loop preload="auto">
+  <source src="background music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const music = document.getElementById("bgMusic");
+
+  function startMusic() {
+    music.play().catch(() => {});
+    document.removeEventListener("click", startMusic);
+    document.removeEventListener("touchstart", startMusic);
+  }
+
+  document.addEventListener("click", startMusic);
+  document.addEventListener("touchstart", startMusic);
+</script>
     <header>
         <h1>Welcome to REDCORE</h1>
         <p>Enjoy our collection of fun games and apps!</p>
@@ -82,7 +98,6 @@
         <p><a href="https://www.instagram.com/_ayush_045__?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="instagram-logo"></a></p>
     </footer>
     <script src="script.js"></script>
-    <script src="https://publisher.linkvertise.com/cdn/linkvertise.js"></script>
     <script>linkvertise(1459362, {whitelist: ["https://ayush-ji0045.github.io/REDCORE/"], blacklist: []});</script>
 </body>
 </html>
