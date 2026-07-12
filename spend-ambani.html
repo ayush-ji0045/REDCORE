@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spend Mukesh Ambani's Money</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+<style>
+  :root{
+    --navy:#0a1424;
+    --navy-2:#0f1e34;
+    --navy-3:#16283f;
+    --gold:#d4af37;
+    --gold-light:#f2dfa0;
+    --saffron:#ff7a33;
+    --maroon:#8a1830;
+    --ivory:#f7f1e3;
+    --muted:#8fa0b8;
+    --line:rgba(212,175,55,0.18);
+    --green:#4ecb8c;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(212,175,55,0.08), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, rgba(255,122,51,0.07), transparent 55%),
+      var(--navy);
+    color:var(--ivory);
+    font-family:'Manrope',sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--gold); color:var(--navy); }
+  img.emoji{ height:1em; width:1em; vertical-align:-0.12em; }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:linear-gradient(180deg, rgba(10,20,36,0.97), rgba(10,20,36,0.94));
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto; padding:14px 24px 12px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .monogram{
+    width:42px; height:42px; border-radius:50%;
+    background:conic-gradient(from 210deg, var(--gold), var(--saffron), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:700; color:var(--navy); font-size:16px;
+    flex-shrink:0;
+  }
+  .brand-text .eyebrow{
+    font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:700;
+  }
+  .brand-text h1{
+    font-family:'Fraunces',serif; font-size:19px; margin:1px 0 0; font-weight:600; color:var(--ivory);
+  }
+  .topbar-right{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .music-toggle{
+    padding:9px 16px; border-radius:99px; border:1px solid var(--line); background:rgba(255,255,255,0.03);
+    color:var(--muted); font-weight:800; font-size:12.5px; cursor:pointer; white-space:nowrap;
+    transition:all .15s;
+  }
+  .music-toggle:hover{ border-color:var(--gold); color:var(--ivory); }
+  .music-toggle.on{ background:var(--gold); color:var(--navy); border-color:var(--gold); }
+  .balance-block{ text-align:right; min-width:230px; }
+  .balance-label{ font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700; display:flex; gap:6px; justify-content:flex-end; align-items:center;}
+  .tick-dot{ width:6px; height:6px; border-radius:50%; background:var(--green); }
+  .balance-amount{
+    font-family:'Fraunces',serif; font-weight:700; font-size:clamp(22px,4vw,32px);
+    font-variant-numeric: tabular-nums; letter-spacing:-0.01em;
+    color:var(--gold-light);
+    transition:color .2s;
+  }
+  .balance-amount.flash-down{ color:#ff8f8f; }
+  .balance-amount.flash-up{ color:var(--green); }
+  .progress-track{
+    height:5px; border-radius:3px; background:rgba(255,255,255,0.06); overflow:hidden; margin-top:4px;
+  }
+  .progress-fill{
+    height:100%; width:0%; border-radius:3px;
+    background:linear-gradient(90deg, var(--saffron), var(--gold));
+    transition:width .35s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* ---------- Ticker tape ---------- */
+  .ticker-wrap{
+    border-bottom:1px solid var(--line);
+    background:rgba(255,255,255,0.015);
+    overflow:hidden; white-space:nowrap; padding:8px 0;
+  }
+  .ticker-track{
+    display:inline-block; padding-left:100%;
+    animation:scrollTicker 32s linear infinite;
+    font-size:12px; color:var(--muted); letter-spacing:.02em; font-weight:600;
+  }
+  .ticker-track span{ margin-right:36px; }
+  .ticker-track .up{ color:var(--green); }
+  .ticker-track .down{ color:#ff8f8f; }
+  @keyframes scrollTicker{ 0%{transform:translateX(0);} 100%{transform:translateX(-100%);} }
+
+  /* ---------- Controls ---------- */
+  .controls{
+    max-width:1180px; margin:0 auto; padding:26px 24px 6px;
+    display:flex; gap:14px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  }
+  .search-box{
+    flex:1; min-width:220px; position:relative;
+  }
+  .search-box input{
+    width:100%; padding:11px 16px 11px 38px; border-radius:10px;
+    border:1px solid var(--line); background:var(--navy-2); color:var(--ivory);
+    font-family:'Manrope',sans-serif; font-size:14px; outline:none;
+  }
+  .search-box input:focus{ border-color:var(--gold); }
+  .search-box::before{
+    content:'⌕'; position:absolute; left:14px; top:50%; transform:translateY(-50%);
+    color:var(--muted); font-size:16px;
+  }
+  .tabs{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tab{
+    padding:9px 15px; border-radius:99px; border:1px solid var(--line); background:transparent;
+    color:var(--muted); font-family:'Manrope',sans-serif; font-weight:700; font-size:13px; cursor:pointer;
+    transition:all .15s;
+  }
+  .tab:hover{ border-color:var(--gold); color:var(--ivory); }
+  .tab.active{ background:var(--gold); color:var(--navy); border-color:var(--gold); }
+
+  /* ---------- Grid ---------- */
+  .grid{
+    max-width:1180px; margin:0 auto; padding:22px 24px 60px;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:16px;
+  }
+  .card{
+    background:linear-gradient(160deg, var(--navy-2), var(--navy-3));
+    border:1px solid var(--line); border-radius:16px; padding:18px;
+    display:flex; flex-direction:column; gap:10px;
+    transition:transform .18s, border-color .18s, box-shadow .18s;
+    position:relative; overflow:hidden;
+  }
+  .card:hover{ transform:translateY(-3px); border-color:rgba(212,175,55,0.45); box-shadow:0 14px 30px -12px rgba(0,0,0,0.5); }
+  .card.owned{ border-color:var(--gold); }
+  .card .icon-badge{
+    width:56px; height:56px; border-radius:14px;
+    background:rgba(212,175,55,0.08); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:28px;
+  }
+  .card .icon-badge img.emoji{ width:30px; height:30px; }
+  .card .name{ font-family:'Fraunces',serif; font-size:16.5px; font-weight:600; margin:0; color:var(--ivory); }
+  .card .price{ font-size:14px; color:var(--gold-light); font-weight:700; font-variant-numeric:tabular-nums; }
+  .card .own-tag{
+    position:absolute; top:14px; right:14px; background:var(--gold); color:var(--navy);
+    font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:99px; letter-spacing:.03em;
+  }
+  .qty-row{ display:flex; align-items:center; gap:8px; margin-top:auto; }
+  .qty-btn{
+    width:30px; height:30px; border-radius:8px; border:1px solid var(--line); background:var(--navy);
+    color:var(--ivory); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .12s;
+  }
+  .qty-btn:hover{ border-color:var(--gold); background:rgba(212,175,55,0.1); }
+  .qty-val{ min-width:26px; text-align:center; font-weight:700; font-variant-numeric:tabular-nums; }
+  .action-row{ display:flex; gap:8px; }
+  .btn{
+    flex:1; padding:9px 0; border-radius:9px; border:none; cursor:pointer;
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:12.5px; letter-spacing:.02em;
+    transition:all .12s;
+  }
+  .btn-buy{ background:linear-gradient(135deg, var(--saffron), var(--gold)); color:var(--navy); }
+  .btn-buy:hover{ filter:brightness(1.08); }
+  .btn-buy:disabled{ opacity:.35; cursor:not-allowed; filter:none; }
+  .btn-sell{ background:transparent; border:1px solid var(--line); color:var(--muted); }
+  .btn-sell:hover:not(:disabled){ border-color:var(--maroon); color:#ff9797; }
+  .btn-sell:disabled{ opacity:.3; cursor:not-allowed; }
+
+  .empty-state{
+    grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--muted);
+  }
+
+  /* ---------- Footer / summary bar ---------- */
+  .summary{
+    max-width:1180px; margin:0 auto 60px; padding:22px 24px; border-top:1px solid var(--line);
+    display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-between;
+  }
+  .summary-stats{ display:flex; gap:26px; flex-wrap:wrap; }
+  .summary-stat .num{ font-family:'Fraunces',serif; font-size:22px; font-weight:700; color:var(--gold-light); }
+  .summary-stat .lbl{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-weight:700; }
+  .reset-btn{
+    padding:10px 20px; border-radius:9px; border:1px solid var(--line); background:transparent;
+    color:var(--muted); font-weight:800; font-size:13px; cursor:pointer;
+  }
+  .reset-btn:hover{ border-color:#ff8f8f; color:#ff8f8f; }
+
+  .about-section{
+    max-width:1180px; margin:0 auto; padding:0 24px 30px;
+  }
+  .about-card{
+    display:flex; gap:16px; align-items:center;
+    background:linear-gradient(135deg, rgba(212,175,55,0.09), rgba(255,122,51,0.06));
+    border:1px solid var(--gold); border-radius:16px; padding:20px 24px;
+  }
+  .about-badge{
+    flex-shrink:0; width:44px; height:44px; border-radius:50%;
+    background:conic-gradient(from 210deg, var(--gold), var(--saffron), var(--gold));
+    color:var(--navy); display:flex; align-items:center; justify-content:center;
+    font-size:20px; font-weight:800;
+  }
+  .about-eyebrow{
+    font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-light); font-weight:700; margin-bottom:4px;
+  }
+  .about-text p{ margin:0 0 8px; font-size:14px; color:var(--ivory); line-height:1.6; }
+  .about-link{
+    display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:800;
+    color:var(--gold-light); text-decoration:none; border-bottom:1px solid transparent;
+    transition:border-color .15s;
+  }
+  .about-link:hover{ border-color:var(--gold-light); }
+
+  .disclaimer{
+    max-width:1180px; margin:0 auto 50px; padding:0 24px; color:var(--muted); font-size:12px; line-height:1.7;
+    border-top:1px solid var(--line); padding-top:20px;
+  }
+
+  .broke-banner{
+    display:none; max-width:1180px; margin:14px auto 0; padding:0 24px;
+  }
+  .broke-banner.show{ display:block; }
+  .broke-banner .box{
+    background:linear-gradient(135deg, rgba(255,122,51,0.15), rgba(212,175,55,0.1));
+    border:1px solid var(--gold); border-radius:14px; padding:16px 20px;
+    font-family:'Fraunces',serif; font-size:16px; color:var(--gold-light);
+  }
+
+  @media (max-width:640px){
+    .balance-block{ text-align:left; }
+    .topbar-inner{ justify-content:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="monogram">MA</div>
+      <div class="brand-text">
+        <div class="eyebrow">The Billion Dollar Shopping Spree · by Ayush</div>
+        <h1>Spend Mukesh Ambani's Money</h1>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="music-toggle" id="bgmToggle">🔈 Music Off</button>
+      <div class="balance-block">
+        <div class="balance-label"><span class="tick-dot"></span> Remaining Net Worth</div>
+        <div class="balance-amount" id="balance">$100,000,000,000</div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ticker-wrap">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<div class="broke-banner" id="brokeBanner">
+  <div class="box">You've spent the entire $100,000,000,000. Sell something back or hit reset to start again.</div>
+</div>
+
+<div class="controls">
+  <div class="search-box"><input type="text" id="searchInput" placeholder="Search items…"></div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="summary">
+  <div class="summary-stats">
+    <div class="summary-stat"><div class="num" id="statSpent">$0</div><div class="lbl">Total Spent</div></div>
+    <div class="summary-stat"><div class="num" id="statItems">0</div><div class="lbl">Items Bought</div></div>
+    <div class="summary-stat"><div class="num" id="statPct">0%</div><div class="lbl">Fortune Used</div></div>
+  </div>
+  <button class="reset-btn" id="resetBtn">↺ Reset Everything</button>
+</div>
+
+<div class="about-section">
+  <div class="about-card">
+    <div class="about-badge">✦</div>
+    <div class="about-text">
+      <div class="about-eyebrow">About this project</div>
+      <p>Made by <b>Ayush</b></p>
+      <a class="about-link" href="https://www.instagram.com/_ayush_045__/" target="_blank" rel="noopener noreferrer">💢 CLICK HERE</a>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  Net worth shown ($100B) is a rounded, illustrative figure for gameplay purposes — real 2026 estimates for Mukesh Ambani's net worth have ranged from roughly $90B to $120B, since almost all of it is tied to Reliance Industries' share price. Item prices are approximate real-world figures used for entertainment. This is a fan-made tribute in the spirit of neal.fun's "Spend Bill Gates' Money" — not affiliated with Mukesh Ambani or Reliance Industries.
+</div>
+
+<script>
+const STARTING_MONEY = 100000000000;
+
+const items = [
+  // Everyday
+  {name:"Cutting Chai", price:0.05, icon:"☕", cat:"Everyday"},
+  {name:"Samosa", price:0.15, icon:"🥟", cat:"Everyday"},
+  {name:"Vada Pav", price:0.3, icon:"🥙", cat:"Everyday"},
+  {name:"Cold Coffee", price:2, icon:"🥤", cat:"Everyday"},
+  {name:"Movie Ticket", price:6, icon:"🎬", cat:"Everyday"},
+  {name:"Book", price:12, icon:"📖", cat:"Everyday"},
+  {name:"Thali Meal", price:8, icon:"🍛", cat:"Everyday"},
+  {name:"Jio Recharge (1 Year)", price:18, icon:"📶", cat:"Everyday"},
+  {name:"Family Biryani Pack", price:25, icon:"🍚", cat:"Everyday"},
+  {name:"Designer Kurta", price:60, icon:"👔", cat:"Everyday"},
+
+  // Fashion & Jewellery
+  {name:"Sunglasses", price:40, icon:"🕶️", cat:"Fashion & Jewellery"},
+  {name:"Perfume Bottle", price:80, icon:"🧴", cat:"Fashion & Jewellery"},
+  {name:"Air Jordans", price:180, icon:"👟", cat:"Fashion & Jewellery"},
+  {name:"Gold Coin (10g)", price:850, icon:"🪙", cat:"Fashion & Jewellery"},
+  {name:"Gold Necklace (1 Tola)", price:3000, icon:"📿", cat:"Fashion & Jewellery"},
+  {name:"Designer Handbag", price:5500, icon:"👜", cat:"Fashion & Jewellery"},
+  {name:"Diamond Ring", price:10000, icon:"💍", cat:"Fashion & Jewellery"},
+  {name:"Rolex", price:15000, icon:"⌚", cat:"Fashion & Jewellery"},
+  {name:"Designer Wardrobe", price:25000, icon:"🧥", cat:"Fashion & Jewellery"},
+  {name:"Emerald Necklace", price:50000, icon:"💎", cat:"Fashion & Jewellery"},
+  {name:"Luxury Watch Collection", price:200000, icon:"⏱️", cat:"Fashion & Jewellery"},
+
+  // Tech & Gadgets
+  {name:"Bluetooth Earbuds", price:120, icon:"🎧", cat:"Tech & Gadgets"},
+  {name:"Cricket Bat", price:150, icon:"🏏", cat:"Tech & Gadgets"},
+  {name:"Smartwatch", price:250, icon:"⌛", cat:"Tech & Gadgets"},
+  {name:"Drone", price:350, icon:"🛸", cat:"Tech & Gadgets"},
+  {name:"Washing Machine", price:500, icon:"🧺", cat:"Tech & Gadgets"},
+  {name:"Gaming Console", price:500, icon:"🎮", cat:"Tech & Gadgets"},
+  {name:"Refrigerator", price:600, icon:"🧊", cat:"Tech & Gadgets"},
+  {name:"Smartphone", price:700, icon:"📱", cat:"Tech & Gadgets"},
+  {name:"Laptop", price:1200, icon:"💻", cat:"Tech & Gadgets"},
+  {name:"OLED Television", price:2000, icon:"📺", cat:"Tech & Gadgets"},
+
+  // Animals & Land
+  {name:"Kitten", price:500, icon:"🐱", cat:"Animals & Land"},
+  {name:"Puppy", price:1500, icon:"🐶", cat:"Animals & Land"},
+  {name:"Acre of Farmland", price:3000, icon:"🌾", cat:"Animals & Land"},
+  {name:"Racehorse", price:50000, icon:"🐎", cat:"Animals & Land"},
+  {name:"Private Island", price:50000000, icon:"🏝️", cat:"Animals & Land"},
+
+  // Vehicles
+  {name:"Bicycle", price:300, icon:"🚲", cat:"Vehicles"},
+  {name:"Activa Scooter", price:1200, icon:"🛵", cat:"Vehicles"},
+  {name:"Auto Rickshaw", price:2300, icon:"🛺", cat:"Vehicles"},
+  {name:"Royal Enfield Classic 350", price:2800, icon:"🏍️", cat:"Vehicles"},
+  {name:"Maruti Swift", price:8000, icon:"🚗", cat:"Vehicles"},
+  {name:"Mahindra Thar", price:18000, icon:"🚙", cat:"Vehicles"},
+  {name:"Tesla Model 3", price:40000, icon:"🔋", cat:"Vehicles"},
+  {name:"Range Rover", price:150000, icon:"🚘", cat:"Vehicles"},
+  {name:"Ferrari", price:300000, icon:"🏎️", cat:"Vehicles"},
+  {name:"Lamborghini", price:250000, icon:"🚔", cat:"Vehicles"},
+  {name:"Rolls-Royce Phantom", price:460000, icon:"🚖", cat:"Vehicles"},
+  {name:"Private Helicopter", price:5000000, icon:"🚁", cat:"Vehicles"},
+  {name:"Yacht", price:10000000, icon:"🛥️", cat:"Vehicles"},
+  {name:"Private Jet", price:75000000, icon:"🛩️", cat:"Vehicles"},
+
+  // Real Estate
+  {name:"Mumbai 2BHK Apartment", price:250000, icon:"🏢", cat:"Real Estate"},
+  {name:"Farmhouse Villa", price:2000000, icon:"🏡", cat:"Real Estate"},
+  {name:"Luxury Penthouse", price:15000000, icon:"🏙️", cat:"Real Estate"},
+  {name:"Skyscraper", price:850000000, icon:"🌆", cat:"Real Estate"},
+  {name:"Antilia-Style Mega Mansion", price:1000000000, icon:"🏰", cat:"Real Estate"},
+
+  // Business & Aviation
+  {name:"Retail Store", price:200000, icon:"🏪", cat:"Business & Aviation"},
+  {name:"Lavish Indian Wedding", price:500000, icon:"💒", cat:"Business & Aviation"},
+  {name:"Retail Store Chain", price:5000000, icon:"🛍️", cat:"Business & Aviation"},
+  {name:"Formula 1 Team", price:700000000, icon:"🏁", cat:"Business & Aviation"},
+  {name:"Suborbital Space Trip", price:450000, icon:"🚀", cat:"Business & Aviation"},
+  {name:"Make a Bollywood Movie", price:30000000, icon:"🎥", cat:"Business & Aviation"},
+  {name:"Shopping Mall", price:100000000, icon:"🏬", cat:"Business & Aviation"},
+  {name:"Communication Satellite", price:200000000, icon:"🛰️", cat:"Business & Aviation"},
+  {name:"Solar Power Plant", price:300000000, icon:"☀️", cat:"Business & Aviation"},
+  {name:"AI Data Center", price:1000000000, icon:"🖥️", cat:"Business & Aviation"},
+  {name:"Regional Airline", price:3000000000, icon:"✈️", cat:"Business & Aviation"},
+
+  // Extravagant
+  {name:"Cruise Ship", price:930000000, icon:"🚢", cat:"Extravagant"},
+  {name:"Oil Refinery Unit", price:2000000000, icon:"🏭", cat:"Extravagant"},
+  {name:"IPL Cricket Team", price:2400000000, icon:"🏆", cat:"Extravagant"},
+  {name:"Bank Stake", price:2000000000, icon:"🏦", cat:"Extravagant"},
+];
+
+const state = { owned:{}, activeCat:"All", search:"" };
+
+function fmtMoney(n){
+  const sign = n < 0 ? "-" : "";
+  n = Math.abs(n);
+  if(n < 1) return sign + "$" + n.toFixed(2);
+  return sign + "$" + Math.round(n).toLocaleString("en-US");
+}
+
+function totalSpent(){
+  let sum = 0, count = 0;
+  for(const key in state.owned){
+    const qty = state.owned[key];
+    const item = items.find(i=>i.name===key);
+    if(item && qty>0){ sum += item.price*qty; count += qty; }
+  }
+  return {sum, count};
+}
+
+function remaining(){ return STARTING_MONEY - totalSpent().sum; }
+
+function renderTabs(){
+  const cats = ["All", ...new Set(items.map(i=>i.cat))];
+  const tabsEl = document.getElementById("tabs");
+  tabsEl.innerHTML = "";
+  cats.forEach(c=>{
+    const btn = document.createElement("button");
+    btn.className = "tab" + (state.activeCat===c ? " active" : "");
+    btn.textContent = c;
+    btn.onclick = () => { state.activeCat = c; renderTabs(); renderGrid(); };
+    tabsEl.appendChild(btn);
+  });
+}
+
+function renderGrid(){
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  const rem = remaining();
+  const filtered = items.filter(i=>{
+    const matchCat = state.activeCat==="All" || i.cat===state.activeCat;
+    const matchSearch = i.name.toLowerCase().includes(state.search.toLowerCase());
+    return matchCat && matchSearch;
+  });
+  if(filtered.length===0){
+    grid.innerHTML = '<div class="empty-state">No items match your search.</div>';
+    return;
+  }
+  filtered.forEach(item=>{
+    const qty = state.owned[item.name] || 0;
+    const card = document.createElement("div");
+    card.className = "card" + (qty>0 ? " owned" : "");
+    card.innerHTML = `
+      ${qty>0 ? `<div class="own-tag">×${qty}</div>` : ""}
+      <div class="icon-badge">${item.icon}</div>
+      <p class="name">${item.name}</p>
+      <div class="price">${fmtMoney(item.price)}</div>
+      <div class="qty-row">
+        <button class="qty-btn" data-action="dec" data-name="${item.name}">−</button>
+        <div class="qty-val" id="qty-${cssId(item.name)}">${qty}</div>
+        <button class="qty-btn" data-action="inc" data-name="${item.name}">+</button>
+      </div>
+      <div class="action-row">
+        <button class="btn btn-sell" data-action="sell" data-name="${item.name}" ${qty<=0?"disabled":""}>Sell</button>
+        <button class="btn btn-buy" data-action="buy" data-name="${item.name}" ${item.price>rem?"disabled":""}>Buy</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+  attachCardHandlers();
+  if(window.twemoji){ twemoji.parse(grid, {folder:'svg', ext:'.svg'}); }
+}
+
+function cssId(name){ return name.replace(/[^a-zA-Z0-9]/g,""); }
+
+function attachCardHandlers(){
+  document.querySelectorAll("[data-action]").forEach(btn=>{
+    btn.onclick = () => {
+      const name = btn.getAttribute("data-name");
+      const action = btn.getAttribute("data-action");
+      const item = items.find(i=>i.name===name);
+      const qty = state.owned[name] || 0;
+      if(action==="buy" || action==="inc"){
+        if(item.price <= remaining()){
+          state.owned[name] = qty + 1;
+          flashBalance("down");
+          playBuySound();
+        }
+      } else if(action==="sell" || action==="dec"){
+        if(qty>0){ state.owned[name] = qty - 1; flashBalance("up"); playSellSound(); }
+      }
+      updateAll();
+    };
+  });
+}
+
+function flashBalance(dir){
+  const el = document.getElementById("balance");
+  el.classList.remove("flash-up","flash-down");
+  void el.offsetWidth;
+  el.classList.add(dir==="up" ? "flash-up" : "flash-down");
+  setTimeout(()=>el.classList.remove("flash-up","flash-down"), 400);
+}
+
+function updateAll(){
+  const {sum, count} = totalSpent();
+  const rem = remaining();
+  document.getElementById("balance").textContent = fmtMoney(rem);
+  document.getElementById("statSpent").textContent = fmtMoney(sum);
+  document.getElementById("statItems").textContent = count.toLocaleString("en-US");
+  const pct = Math.min(100, (sum/STARTING_MONEY)*100);
+  document.getElementById("statPct").textContent = pct.toFixed(pct<1 && pct>0 ? 4 : 2) + "%";
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("brokeBanner").classList.toggle("show", rem<=0);
+  renderGrid();
+}
+
+document.getElementById("searchInput").addEventListener("input", (e)=>{
+  state.search = e.target.value;
+  renderGrid();
+});
+
+document.getElementById("resetBtn").onclick = () => {
+  state.owned = {};
+  updateAll();
+};
+
+// ================= AUDIO ENGINE =================
+let audioCtx = null;
+let masterGain, bgmGain, sfxGain;
+let bgmPlaying = false;
+let bgmTimeoutId = null;
+
+function ensureAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 1;
+    masterGain.connect(audioCtx.destination);
+    bgmGain = audioCtx.createGain();
+    bgmGain.gain.value = 1;
+    bgmGain.connect(masterGain);
+    sfxGain = audioCtx.createGain();
+    sfxGain.gain.value = 1;
+    sfxGain.connect(masterGain);
+  }
+  if(audioCtx.state === "suspended"){ audioCtx.resume(); }
+}
+
+function playTone(freq, startTime, duration, type, peakGain, destGain){
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, startTime);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.linearRampToValueAtTime(peakGain, startTime + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  osc.connect(gain);
+  gain.connect(destGain);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.05);
+}
+
+function playBuySound(){
+  ensureAudio();
+  const t = audioCtx.currentTime;
+  playTone(523.25, t, 0.12, 'triangle', 0.20, sfxGain);
+  playTone(659.25, t + 0.07, 0.12, 'triangle', 0.20, sfxGain);
+  playTone(783.99, t + 0.14, 0.22, 'triangle', 0.20, sfxGain);
+}
+
+function playSellSound(){
+  ensureAudio();
+  const t = audioCtx.currentTime;
+  playTone(659.25, t, 0.12, 'sine', 0.16, sfxGain);
+  playTone(523.25, t + 0.08, 0.12, 'sine', 0.16, sfxGain);
+  playTone(392.00, t + 0.16, 0.20, 'sine', 0.16, sfxGain);
+}
+
+// gentle, indefinitely-looping ambient melody (pentatonic)
+const scale = [261.63,293.66,329.63,392.00,440.00,523.25,587.33,659.25,784.00];
+const melodyPattern = [0,null,4,2, 6,4,2,null, 3,5,7,5, 4,2,null,0];
+const padDegrees = [0,2,4];
+const stepDur = 0.34;
+const loopLength = melodyPattern.length * stepDur;
+
+function scheduleBgmLoop(){
+  if(!bgmPlaying) return;
+  const startTime = audioCtx.currentTime + 0.08;
+  melodyPattern.forEach((deg, i) => {
+    if(deg === null) return;
+    const freq = scale[deg];
+    const t = startTime + i * stepDur;
+    playTone(freq, t, stepDur * 1.7, 'sine', 0.07, bgmGain);
+  });
+  padDegrees.forEach(deg => {
+    const freq = scale[deg] / 2;
+    playTone(freq, startTime, loopLength, 'triangle', 0.028, bgmGain);
+  });
+  bgmTimeoutId = setTimeout(scheduleBgmLoop, loopLength * 1000);
+}
+
+document.getElementById("bgmToggle").onclick = () => {
+  ensureAudio();
+  bgmPlaying = !bgmPlaying;
+  const btn = document.getElementById("bgmToggle");
+  if(bgmPlaying){
+    btn.textContent = "🔊 Music On";
+    btn.classList.add("on");
+    scheduleBgmLoop();
+  } else {
+    btn.textContent = "🔈 Music Off";
+    btn.classList.remove("on");
+    clearTimeout(bgmTimeoutId);
+  }
+};
+
+// ================= TICKER TAPE =================
+const tickerItems = [
+  {t:"RELIANCE (RIL)", v:"+0.4%", up:true},
+  {t:"JIO PLATFORMS", v:"+0.9%", up:true},
+  {t:"RELIANCE RETAIL", v:"−0.2%", up:false},
+  {t:"MUMBAI INDIANS", v:"steady", up:true},
+  {t:"ANTILIA VALUATION", v:"+0.1%", up:true},
+];
+const track = document.getElementById("tickerTrack");
+function buildTicker(){
+  track.innerHTML = "";
+  for(let r=0;r<3;r++){
+    tickerItems.forEach(it=>{
+      const span = document.createElement("span");
+      span.innerHTML = `${it.t} <span class="${it.up?'up':'down'}">${it.v}</span>`;
+      track.appendChild(span);
+    });
+  }
+}
+buildTicker();
+
+renderTabs();
+updateAll();
+</script>
+
+</body>
+</html>
