@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REDCORE - website by ayushx</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <audio id="bgMusic" loop preload="auto">
+  <source src="background music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const music = document.getElementById("bgMusic");
+
+  function startMusic() {
+    music.play().catch(() => {});
+    document.removeEventListener("click", startMusic);
+    document.removeEventListener("touchstart", startMusic);
+  }
+
+  document.addEventListener("click", startMusic);
+  document.addEventListener("touchstart", startMusic);
+</script>
+    <header>
+        <h1>Welcome to REDCORE</h1>
+        <p>Enjoy our collection of fun games and apps!</p>
+    </header>
+    <main>
+        <div class="games-container">
+            <div class="game-box" id="game1">
+                <div class="box-inner">
+                    <div class="box-front">
+                        <h2>Flappy Yadav</h2>
+                        <a href="game.html" class="play-btn">Play Now</a>
+                    </div>
+                    <div class="box-back">
+                        <p>Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+            <div class="game-box" id="game2">
+                <div class="box-inner">
+                    <div class="box-front">
+                        <h2>Day Pridictor</h2>
+                        <a href="game2.html" class="play-btn">Play Now</a>
+                    </div>
+                    <div class="box-back">
+                        <p>Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+            <div class="game-box" id="game3">
+                <div class="box-inner">
+                    <div class="box-front">
+                        <h2>IQ TEST</h2>
+                        <a href="iq_test.html" class="play-btn">Play Now</a>
+                    </div>
+                    <div class="box-back">
+                        <p>Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+            <div class="game-box" id="game4">
+                <div class="box-inner">
+                    <div class="box-front">
+                        <h2>Spend Ambani Money</h2>
+                        <a href="spend-ambani.html" class="play-btn">Play Now</a>
+                    </div>
+                    <div class="box-back">
+                        <p>Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+            <div class="game-box" id="game5">
+                <div class="box-inner">
+                    <div class="box-front">
+                        <h2>Game 5</h2>
+                        <button class="play-btn" disabled>Coming Soon</button>
+                    </div>
+                    <div class="box-back">
+                        <p>Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <section id="about-us">
+        <h2>About REDCORE</h2>
+        <p>At REDCORE, we believe in the power of play to ignite imagination and creativity. Our 3D games are designed to transport you to vibrant worlds where every click sparks adventure. We're passionate about pushing the boundaries of interactive entertainment, blending cutting-edge technology with timeless fun. Join us in exploring the endless possibilities of gaming – where every game is a story waiting to be told.</p>
+        <p>Our mission is to create immersive experiences that not only entertain but also inspire. From the thrill of competition to the joy of discovery, REDCORE is your gateway to unforgettable moments. Stay tuned as we expand our collection with even more exciting games!</p>
+    </section>
+    <footer>
+        <p>&copy; 2023 REDCORE. All rights reserved.</p>
+        <p>More games coming soon!</p>
+        <p>Developer AYUSHX</p>
+        <p><a href="https://www.instagram.com/_ayush_045__?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="instagram-logo"></a></p>
+    </footer>
+    <script src="script.js"></script>
+    <script>linkvertise(1459362, {whitelist: ["https://ayush-ji0045.github.io/REDCORE/"], blacklist: []});</script>
+</body>
+</html>

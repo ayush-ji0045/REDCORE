@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IQ Examiner</title>
+<style>
+body{
+  margin:0;
+  background:#020617;
+  color:#e5e7eb;
+  font-family:Segoe UI,Arial;
+}
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:30px;
+}
+h1,h2,h3{text-align:center}
+button{
+  background:#22d3ee;
+  border:none;
+  padding:12px 22px;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{transform:scale(1.05);}
+input{
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  margin-top:10px;
+  width:80%;
+}
+.option{
+  background:#0f172a;
+  border:1px solid #1e293b;
+  padding:14px;
+  margin:10px 0;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.option:hover{background:#1e293b}
+.hidden{display:none}
+
+#loader{
+  width:140px;
+  height:140px;
+  border:10px solid #1e293b;
+  border-top:10px solid #22d3ee;
+  border-radius:50%;
+  margin:40px auto;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.correct{color:#22c55e;font-weight:600}
+.wrong{color:#ef4444;font-weight:600}
+
+#resultCard{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  min-height:60vh;
+  background:#111827;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 0 25px rgba(34,211,238,0.6);
+  animation:cardGlow 3s ease-in-out infinite alternate;
+}
+@keyframes cardGlow{
+  0%{box-shadow:0 0 15px rgba(34,211,238,0.4);}
+  100%{box-shadow:0 0 35px rgba(34,211,238,0.8);}
+}
+.score-box{
+  margin:20px 0;
+  padding:25px 40px;
+  border-radius:16px;
+  font-size:26px;
+  font-weight:700;
+  color:#fff;
+  background:linear-gradient(270deg, red, green, blue);
+  background-size:600% 600%;
+  animation:rgbGlow 6s ease infinite;
+}
+@keyframes rgbGlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+footer{text-align:center;opacity:.6;margin-top:40px}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>IQ EXAMINER</h1>
+
+<div id="askName">
+  <h2>Enter Your Name</h2>
+  <input type="text" id="userName" placeholder="Your Name">
+  <br>
+  <button onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<div id="quiz" class="hidden">
+  <h3 id="count"></h3>
+  <h2 id="question"></h2>
+  <div id="options"></div>
+  <button id="showResultBtn" class="hidden" onclick="showResult()">Show Result</button>
+</div>
+
+<div id="loading" class="hidden">
+  <h2>Analyzing Cognitive Pattern…</h2>
+  <div id="loader"></div>
+</div>
+
+<div id="result" class="hidden">
+  <div id="resultCard">
+    <h2 id="resName"></h2>
+    <div class="score-box" id="scoreBox"></div>
+    <p id="summary"></p>
+    <p id="thought"></p>
+    <div id="review"></div>
+    <button onclick="location.reload()">Restart</button>
+  </div>
+</div>
+
+<footer>Developed by ayushx</footer>
+</div>
+
+<script>
+/* ===================== 100 IQ QUESTIONS ===================== */
+const bank=[
+{q:"2,4,8,16,?",o:["18","24","30","32"],a:3},{q:"1,4,9,16,?",o:["20","24","25","30"],a:2},
+{q:"3,6,12,24,?",o:["36","40","48","60"],a:2},{q:"Which is odd?",o:["121","144","169","196"],a:1},
+{q:"CAT = 24, DOG = ?",o:["26","28","30","32"],a:1},{q:"Most sides?",o:["Hexagon","Octagon","Heptagon","Nonagon"],a:3},
+{q:"5 machines make 5 items in 5 min. One item?",o:["1","5","10","?"],a:1},{q:"Odd one out",o:["Iron","Gold","Silver","Plastic"],a:3},
+{q:"AZ, BY, CX, ?",o:["DW","EV","FU","GT"],a:0},{q:"Prime number?",o:["21","29","39","49"],a:1},
+{q:"Z,X,V,T,?",o:["S","R","Q","P"],a:1},{q:"1kg iron vs cotton",o:["Iron","Cotton","Same","Depends"],a:2},
+{q:"7,14,28,?",o:["35","42","49","56"],a:3},{q:"Odd word",o:["Run","Walk","Sleep","Jog"],a:2},
+{q:"No edges?",o:["Cube","Sphere","Cone","Pyramid"],a:1},{q:"TODAY = UPEBZ, CAT = ?",o:["DBU","CBU","DAT","DBT"],a:0},
+{q:"10,20,40,80,?",o:["120","140","160","200"],a:2},{q:"1,1,2,3,5,?",o:["7","8","9","10"],a:1},
+{q:"Not polygon?",o:["Triangle","Square","Circle","Pentagon"],a:2},{q:"RED=27, BLUE=?",o:["36","38","40","42"],a:1},
+{q:"2,3,5,7,11,14 odd?",o:["2","7","11","14"],a:3},{q:"Months with 28 days?",o:["1","2","12","Depends"],a:2},
+{q:"100,90,80,?",o:["65","70","75","60"],a:3},{q:"A,C,F,J,?",o:["M","N","O","P"],a:0},
+{q:"Odd shape",o:["Square","Rectangle","Triangle","Cube"],a:3},{q:"4,9,16,25,?",o:["30","36","40","49"],a:1},
+{q:"3 cats 3 mice 3 min. 1 cat?",o:["1","3","9","?"],a:1},{q:"6,12,18,?,30",o:["20","22","24","26"],a:2},
+{q:"Palindrome?",o:["12321","12345","11223","12231"],a:0},{q:"Odd one",o:["Mercury","Venus","Earth","Sun"],a:3},
+{q:"8,16,32,?,128",o:["48","56","64","72"],a:2},{q:"Least value?",o:["3/4","0.7","2/3","0.8"],a:2},
+{q:"Perfect cube?",o:["16","27","36","64"],a:1},{q:"Not multiple of 3?",o:["21","27","34","39"],a:2},
+{q:"B,E,H,K,?",o:["L","M","N","O"],a:1},{q:"Different",o:["Pen","Pencil","Eraser","Book"],a:3},
+{q:"12=144, 15=?",o:["180","200","225","240"],a:2},{q:"Odd number?",o:["14","18","22","27"],a:3},
+{q:"2,6,18,54,?",o:["72","108","162","216"],a:2},{q:"Largest angle?",o:["90","180","45","60"],a:1},
+{q:"Correct spelling?",o:["Definately","Definitely","Definatly","Defenetly"],a:1},{q:"1,3,6,10,?",o:["13","14","15","16"],a:2},
+{q:"Leap year?",o:["1900","2000","2100","2200"],a:1},{q:"M,J,G,D,?",o:["B","A","C","Z"],a:1},
+{q:"Not mammal?",o:["Whale","Bat","Dolphin","Shark"],a:3},{q:"5²+3²=?",o:["28","34","38","40"],a:1},
+{q:"Divisible by 9?",o:["234","235","237","239"],a:2},{q:"Longest wavelength?",o:["Gamma","X-ray","UV","Radio"],a:3},
+{q:"Odd fruit?",o:["Apple","Banana","Mango","Tomato"],a:3},{q:"A=1, Z=?",o:["24","25","26","27"],a:2},
+{q:"1+1×0=?",o:["0","1","2","Undefined"],a:1},{q:"Smallest prime?",o:["0","1","2","3"],a:2},
+{q:"Even prime?",o:["1","2","3","5"],a:1},{q:"Roman X=?",o:["5","10","50","100"],a:1},
+{q:"Binary of 2?",o:["10","11","01","00"],a:0},{q:"Opposite of expand?",o:["Grow","Increase","Contract","Extend"],a:2},
+{q:"24 hours=?",o:["1 day","2 days","12 hrs","48 hrs"],a:0},{q:"Odd planet?",o:["Earth","Mars","Pluto","Jupiter"],a:2},
+{q:"Speed unit?",o:["kg","m/s","N","J"],a:1},{q:"Triangle angles sum?",o:["90","180","270","360"],a:1},
+{q:"3,5,7,9,?",o:["11","12","13","14"],a:0},{q:"9-3×2=?",o:["0","3","6","-3"],a:0},
+{q:"What is 50% of 200?",o:["50","100","150","200"],a:1},{q:"Cube of 3?",o:["6","9","27","81"],a:2},
+{q:"5×5+5=?",o:["25","30","35","40"],a:1},{q:"If 2+3=10, 3+4=?",o:["12","21","17","20"],a:1},
+{q:"Next in series: 1,2,4,8,?",o:["16","12","10","14"],a:0},{q:"Find odd: Red, Blue, Green, Dog",o:["Red","Blue","Green","Dog"],a:3},
+{q:"Square root of 49?",o:["6","7","8","9"],a:1},{q:"Next letter: A,B,D,G,?",o:["J","K","H","I"],a:0},
+{q:"Largest number?",o:["12","45","37","23"],a:1},{q:"Smallest fraction?",o:["1/2","1/3","2/5","3/4"],a:1},
+{q:"Which is composite?",o:["2","3","4","5"],a:2},{q:"Mirror of 123?",o:["321","132","213","231"],a:0},
+{q:"Next prime after 7?",o:["9","11","13","15"],a:1},{q:"Opposite of hot?",o:["Cold","Warm","Cool","Chill"],a:0},
+{q:"What is 7×8?",o:["54","56","58","64"],a:1},{q:"If x=2, 3x+5=?",o:["11","10","12","9"],a:0},
+{q:"5²=?",o:["10","20","25","30"],a:2},{q:"Cube root of 27?",o:["2","3","9","6"],a:1},
+{q:"Next in pattern: 2,4,8,16,?",o:["20","24","32","36"],a:2},{q:"Sum 15+27?",o:["40","42","42","45"],a:3},
+{q:"Next month after June?",o:["July","August","May","June"],a:0},{q:"First odd prime?",o:["1","2","3","5"],a:2},
+{q:"Next in series: 2,5,10,17,?",o:["24","26","28","30"],a:0},{q:"Largest planet?",o:["Earth","Mars","Jupiter","Venus"],a:2},
+{q:"Next in letters: B,E,H,K,?",o:["N","M","L","O"],a:2},{q:"Even number?",o:["11","12","13","14"],a:1}
+];
+
+/* ===================== QUIZ LOGIC ===================== */
+let picked=[], i=0, score=0, answers=[], startTime, userName;
+
+function startQuiz(){
+  userName=document.getElementById("userName").value.trim();
+  if(!userName){alert("Enter your name!");return;}
+  document.getElementById("askName").classList.add("hidden");
+  picked=[...bank].sort(()=>Math.random()-0.5).slice(0,10);
+  i=0; score=0; answers=[];
+  startTime=Date.now();
+  document.getElementById("quiz").classList.remove("hidden");
+  showQ();
+}
+
+function showQ(){
+  document.getElementById("count").innerText=`Question ${i+1}/10`;
+  document.getElementById("question").innerText=picked[i].q;
+  let o=document.getElementById("options");
+  o.innerHTML="";
+  picked[i].o.forEach((t,idx)=>{
+    let d=document.createElement("div");
+    d.className="option";
+    d.innerText=t;
+    d.onclick=()=>choose(idx);
+    o.appendChild(d);
+  });
+  document.getElementById("showResultBtn").classList.add("hidden");
+}
+
+function choose(c){
+  answers[i]=c;
+  if(c===picked[i].a) score++;
+  i++;
+  if(i<10) showQ();
+  else document.getElementById("showResultBtn").classList.remove("hidden");
+}
+
+function showResult(){
+  document.getElementById("quiz").classList.add("hidden");
+  document.getElementById("loading").classList.remove("hidden");
+
+  setTimeout(()=>{
+    document.getElementById("loading").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
+    let time=(Date.now()-startTime)/1000;
+    let iq=Math.round(90 + score*6 - time*0.2);
+
+    document.getElementById("resName").innerText = `Name: ${userName}`;
+    document.getElementById("scoreBox").innerText = `IQ SCORE: ${iq}`;
+    document.getElementById("summary").innerHTML =
+      `Correct: ${score}/10 | Time: ${time.toFixed(1)}s | Wrong: ${10-score}`;
+    const thoughts=["Great job! Keep challenging your mind.","Impressive! Your brain is on fire.","Nice! But there’s room to grow.","Well done! Try again to improve."];
+    document.getElementById("thought").innerText=thoughts[Math.floor(Math.random()*thoughts.length)];
+
+    let r=document.getElementById("review");
+    r.innerHTML="";
+    picked.forEach((q,idx)=>{
+      r.innerHTML+=`<p>${idx+1}. ${q.q}<br>
+      Your: <span class="${answers[idx]===q.a?"correct":"wrong"}">${q.o[answers[idx]]}</span> | 
+      Correct: ${q.o[q.a]}</p>`;
+    });
+  },1500);
+}
+</script>
+</body>
+</html>
+
