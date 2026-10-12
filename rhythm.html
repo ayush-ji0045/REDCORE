@@ -219,7 +219,7 @@ const laneEls=Array.from(document.querySelectorAll('.lane'));
 const songButtons=Array.from(document.querySelectorAll('.song-card'));
 const $=id=>document.getElementById(id);
 let selected='drive',audioCtx=null,noiseBuffer=null,audioStart=0,gameStart=0,raf=0,playing=false,paused=false;
-let notes=[],nextHitAt=0,beatIndex=0,score=0,combo=0,bestCombo=0,hits=0,judged=0,misses=0,highScore=0,elapsedBeforePause=0,pauseAt=0,runStart=0;
+let notes=[],nextHitAt=0,beatIndex=0,score=0,combo=0,bestCombo=0,hits=0,judged=0,misses=0,highScore=0,elapsedBeforePause=0,pauseAt=0,runStart=0,drumsScheduled=new Set();
 const TRAVEL=2200,WINDOWS={perfect:55,great:105,good:165,miss:190};
 const laneKeys=['a','s','d','f','g'];
 const laneColors=['#38f6ff','#ff56d6','#a993ff','#c9ff4a','#ff9c5b'];
@@ -312,7 +312,7 @@ function registerMiss(n){
 function scheduleAudio(n,elapsed){
  if(n.audioScheduled||n.hitAt-elapsed>120)return;
  n.audioScheduled=true;const when=audioStart+n.hitAt/1000;
- if(!n.drumDone){n.drumDone=true;playDrums(when,n.index)}
+ if(!drumsScheduled.has(n.index)){drumsScheduled.add(n.index);playDrums(when,n.index)}
  playNoteSound(n.lane,when,true);
 }
 function frame(){
@@ -334,7 +334,7 @@ function frame(){
 async function startGame(){
  cancelAnimationFrame(raf);clearNotes();$('endScreen').hidden=true;
  try{await initAudio()}catch(err){alert(err.message||'Audio could not start in this browser.');return}
- score=0;combo=0;bestCombo=0;hits=0;judged=0;misses=0;beatIndex=0;nextHitAt=TRAVEL;elapsedBeforePause=0;paused=false;playing=true;
+ score=0;combo=0;bestCombo=0;hits=0;judged=0;misses=0;beatIndex=0;nextHitAt=TRAVEL;elapsedBeforePause=0;drumsScheduled=new Set();paused=false;playing=true;
  gameStart=performance.now();runStart=gameStart;pauseAt=gameStart;audioStart=audioCtx.currentTime+.12;
  $('lobby').classList.add('hidden');$('game').classList.add('active');$('pauseBtn').textContent='Ⅱ Pause';$('trackLabel').textContent=tracks[selected].name;
  document.documentElement.style.setProperty('--cyan',tracks[selected].color);
@@ -354,7 +354,7 @@ function finishGame(){
 function togglePause(){
  if(!playing)return;
  if(!paused){paused=true;pauseAt=performance.now();cancelAnimationFrame(raf);if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();$('pauseBtn').textContent='▶ Resume';showFeedback('PAUSED','#38f6ff')}
- else{elapsedBeforePause+=performance.now()-pauseAt;gameStart=performance.now();paused=false;if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();audioStart=audioCtx.currentTime+.12-runElapsed()/1000;$('pauseBtn').textContent='Ⅱ Pause';raf=requestAnimationFrame(frame)}
+ else{elapsedBeforePause=pauseAt-gameStart+elapsedBeforePause;gameStart=performance.now();paused=false;if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();audioStart=audioCtx.currentTime+.12-runElapsed()/1000;$('pauseBtn').textContent='Ⅱ Pause';raf=requestAnimationFrame(frame)}
 }
 function backToSongs(){playing=false;paused=false;cancelAnimationFrame(raf);clearNotes();$('game').classList.remove('active');$('lobby').classList.remove('hidden');$('endScreen').hidden=true}
 laneEls.forEach((lane,i)=>lane.addEventListener('pointerdown',ev=>{ev.preventDefault();judgeLane(i)}));
