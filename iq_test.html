@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8">\r\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>IQ Examiner</title>
 <style>
 body{
@@ -94,6 +94,19 @@ input{
 }
 
 footer{text-align:center;opacity:.6;margin-top:40px}
+@media(max-width:600px){
+ .container{width:100%;padding:18px 13px}
+ h1{font-size:clamp(1.6rem,8vw,2.2rem)}
+ h2{font-size:1.2rem}
+ .option{padding:13px 11px;line-height:1.45;overflow-wrap:anywhere}
+ #resultCard{min-height:0;padding:22px 14px;border-radius:15px}
+ .score-box{max-width:100%;padding:18px 16px;font-size:clamp(1.2rem,6vw,1.6rem);overflow-wrap:anywhere}
+ #review{width:100%;text-align:left;overflow-wrap:anywhere;font-size:.9rem}
+ input{width:100%;max-width:360px}
+ button{max-width:100%;touch-action:manipulation}
+ footer{margin-top:24px;padding-bottom:env(safe-area-inset-bottom)}
+}
+@media(min-width:601px){.container{padding:30px 24px}}
 </style>
 </head>
 
