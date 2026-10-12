@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b18">
+<title>REDCORE Runner | Arcade</title>
+<style>
+:root{color-scheme:dark;--bg:#070b18;--panel:#10182b;--cyan:#38f6ff;--pink:#ff3dca;--lime:#c9ff4a;--muted:#9aa9c9}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#17284b 0,#070b18 58%);color:#f5f8ff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;display:flex;justify-content:center;padding:20px 14px calc(20px + env(safe-area-inset-bottom))}
+.wrap{width:min(900px,100%)}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0 16px}.brand{font-weight:950;letter-spacing:.13em;font-size:clamp(1.25rem,4vw,2rem);text-shadow:0 0 18px #38f6ff70}.brand span{color:var(--cyan)}.back{color:var(--cyan);text-decoration:none;border:1px solid #38f6ff80;padding:9px 13px;border-radius:10px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}.stat,.game-shell,.help{background:linear-gradient(145deg,#121d35ed,#0a1122ed);border:1px solid #314366;border-radius:15px;box-shadow:0 0 24px #0005}.stat{padding:10px 12px;text-align:center}.stat small{display:block;color:var(--muted);text-transform:uppercase;font-size:.68rem;letter-spacing:.13em}.stat strong{display:block;font-size:1.35rem;color:var(--lime);font-variant-numeric:tabular-nums}
+.game-shell{padding:10px;position:relative;overflow:hidden}.screen{position:relative}.screen:before{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid #38f6ff30;border-radius:9px;z-index:1}canvas{display:block;width:100%;height:auto;aspect-ratio:800/360;border-radius:9px;background:#080f21;touch-action:manipulation}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;background:#060b18b8;backdrop-filter:blur(4px);border-radius:9px}.overlay.hidden{display:none}.overlay-card{max-width:430px}.eyebrow{color:var(--cyan);font-weight:800;letter-spacing:.22em;font-size:.72rem}.overlay h1{font-size:clamp(1.7rem,6vw,3.2rem);line-height:1.05;margin:8px 0;text-shadow:0 0 20px #ff3dca80}.overlay p{color:#d4ddf5;line-height:1.55;margin:10px 0 18px}.primary,.control{border:0;border-radius:11px;font:inherit;font-weight:850;cursor:pointer;touch-action:manipulation}.primary{padding:13px 23px;background:linear-gradient(90deg,var(--cyan),#7cffd5);color:#07101d;box-shadow:0 0 24px #38f6ff35}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.control{min-height:56px;background:#111d35;border:1px solid #38f6ff85;color:#f5f8ff;font-size:1rem}.control span{color:var(--cyan);margin-right:7px}.control:active,.primary:active{transform:scale(.98)}.help{margin-top:12px;padding:14px 16px;color:var(--muted);font-size:.9rem;line-height:1.6}.help strong{color:#eaf4ff}.footer-note{text-align:center;color:#667797;font-size:.75rem;margin:14px 0 0}
+@media(min-width:700px){.controls{max-width:460px;margin:12px auto 0}.control{min-height:48px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand"><span>RED</span>CORE <span>///</span> RUNNER</div><a class="back" href="index.html">← Game Hub</a></div>
+  <div class="stats">
+    <div class="stat"><small>Distance</small><strong id="score">00000</strong></div>
+    <div class="stat"><small>Best Run</small><strong id="best">00000</strong></div>
+    <div class="stat"><small>Speed</small><strong id="speed">1.0x</strong></div>
+  </div>
+  <section class="game-shell" aria-label="REDCORE Runner game">
+    <div class="screen">
+      <canvas id="game" width="800" height="360" aria-label="Runner game play area"></canvas>
+      <div class="overlay" id="overlay"><div class="overlay-card"><div class="eyebrow">ARCADE PROTOCOL 005</div><h1 id="overlayTitle">RUN THE GRID.</h1><p id="overlayText">Jump the neon barriers. Stay alive. Beat your personal best.</p><button class="primary" id="start">START RUN ▶</button></div></div>
+    </div>
+  </section>
+  <div class="controls"><button class="control" id="jump"><span>↑</span> JUMP</button><button class="control" id="sound"><span>♫</span> SOUND: ON</button></div>
+  <div class="help"><strong>HOW TO PLAY</strong><br>Press <strong>Space</strong> or <strong>↑</strong> to jump. On a phone, tap <strong>JUMP</strong> or tap the game area. Avoid the red laser blocks for as long as you can. Your best distance is saved on this device.</div>
+  <div class="footer-note">REDCORE ARCADE · BUILT FOR DESKTOP & MOBILE</div>
+</div>
+<script>
+(()=>{
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
+const scoreEl=document.getElementById('score'),bestEl=document.getElementById('best'),speedEl=document.getElementById('speed');
+const overlay=document.getElementById('overlay'),titleEl=document.getElementById('overlayTitle'),textEl=document.getElementById('overlayText'),startBtn=document.getElementById('start'),jumpBtn=document.getElementById('jump'),soundBtn=document.getElementById('sound');
+const W=800,H=360,ground=292;let state='ready',score=0,best=0,speed=1,player,obstacles,particles,last=0,spawnIn=0,soundOn=true,audioCtx=null,frame=0;
+try{best=Number(localStorage.getItem('redcoreRunnerBest'))||0}catch(e){}bestEl.textContent=String(best).padStart(5,'0');
+function tone(freq=440,duration=.08,type='sine',volume=.045){if(!soundOn)return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,audioCtx.currentTime);g.gain.setValueAtTime(volume,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration)}catch(e){}}
+function reset(){score=0;speed=1;spawnIn=70;frame=0;obstacles=[];particles=[];player={x:105,y:ground-42,w:31,h:42,vy:0,onGround:true};scoreEl.textContent='00000';speedEl.textContent='1.0x'}
+function start(){reset();state='running';overlay.classList.add('hidden');last=performance.now();tone(660,.09,'triangle');requestAnimationFrame(loop)}
+function jump(){if(state!=='running'){if(state==='ready'||state==='over')start();return}if(player.onGround){player.vy=-590;player.onGround=false;tone(510,.07,'square',.025);for(let i=0;i<5;i++)particles.push({x:player.x+10,y:ground-3,vx:-Math.random()*100,vy:-Math.random()*100,life:.35})}}
+function end(){state='over';tone(130,.28,'sawtooth',.06);const rounded=Math.floor(score);if(rounded>best){best=rounded;try{localStorage.setItem('redcoreRunnerBest',String(best))}catch(e){}bestEl.textContent=String(best).padStart(5,'0');titleEl.textContent='NEW PERSONAL BEST!'}else titleEl.textContent='RUN TERMINATED';textEl.textContent='Distance: '+rounded+' · Best: '+best+'. Ready for another run?';startBtn.textContent='RUN AGAIN ↻';overlay.classList.remove('hidden')}
+function rect(x,y,w,h,color,glow=0){ctx.save();ctx.shadowBlur=glow;ctx.shadowColor=color;ctx.fillStyle=color;ctx.fillRect(x,y,w,h);ctx.restore()}
+function draw(){ctx.clearRect(0,0,W,H);const grad=ctx.createLinearGradient(0,0,0,H);grad.addColorStop(0,'#0a1530');grad.addColorStop(1,'#080c1a');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#24385b';ctx.lineWidth=1;for(let x=(frame*.45)%42-42;x<W;x+=42){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ground);ctx.stroke()}for(let y=35;y<ground;y+=38){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+for(let i=0;i<24;i++){const x=(i*97-frame*.18+W*5)%(W+20),y=18+(i*41)%190;ctx.fillStyle=i%3===0?'#ff3dca':'#38f6ff';ctx.globalAlpha=.35;ctx.fillRect(x,y,2,2)}ctx.globalAlpha=1;
+rect(0,ground,W,3,'#38f6ff',13);for(let x=-(frame*speed%60);x<W;x+=60)rect(x,ground+14,28,3,'#254268');
+if(player){ctx.save();ctx.shadowColor='#38f6ff';ctx.shadowBlur=18;ctx.fillStyle='#38f6ff';ctx.fillRect(player.x,player.y+9,player.w,player.h-9);ctx.fillStyle='#d9ffff';ctx.fillRect(player.x+18,player.y+16,8,6);ctx.fillStyle='#ff3dca';ctx.fillRect(player.x+4,player.y+player.h-4,9,5);ctx.fillRect(player.x+21,player.y+player.h-4,9,5);ctx.restore();rect(player.x-13,player.y+20,10,4,'#ff3dca',10)}
+obstacles.forEach(o=>{rect(o.x,o.y,o.w,o.h,'#ff3d65',15);rect(o.x+4,o.y+5,4,Math.max(4,o.h-10),'#ffd1e0',5);ctx.fillStyle='#ff3dca';ctx.globalAlpha=.7;ctx.fillRect(o.x-5,o.y+o.h-2,o.w+10,3);ctx.globalAlpha=1});
+particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life*2);rect(p.x,p.y,3,3,'#38f6ff',6);ctx.globalAlpha=1});
+if(state==='ready'){ctx.fillStyle='#a5b7db';ctx.font='14px monospace';ctx.fillText('SYSTEM ONLINE  /  WAITING FOR RUNNER',24,30)}}
+function loop(now){if(state!=='running')return;const dt=Math.min((now-last)/1000,.035);last=now;frame+=dt*60;score+=dt*10*speed;speed=Math.min(2.3,1+score/700);player.vy+=1500*dt;player.y+=player.vy*dt;if(player.y+player.h>=ground){player.y=ground-player.h;player.vy=0;player.onGround=true}
+spawnIn-=dt*60;if(spawnIn<=0){const h=27+Math.random()*33,w=18+Math.random()*16;obstacles.push({x:W+10,y:ground-h,w,h});spawnIn=Math.max(44,83-Math.random()*22-score/65)}
+obstacles.forEach(o=>o.x-=285*speed*dt);obstacles=obstacles.filter(o=>o.x+o.w>-10);
+particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=250*dt;p.life-=dt});particles=particles.filter(p=>p.life>0);
+for(const o of obstacles){if(player.x+player.w-5>o.x+3&&player.x+5<o.x+o.w-2&&player.y+player.h-4>o.y+3){end();break}}
+scoreEl.textContent=String(Math.floor(score)).padStart(5,'0');speedEl.textContent=speed.toFixed(1)+'x';draw();if(state==='running')requestAnimationFrame(loop)}
+startBtn.addEventListener('click',start);jumpBtn.addEventListener('click',jump);canvas.addEventListener('pointerdown',e=>{e.preventDefault();jump()});soundBtn.addEventListener('click',()=>{soundOn=!soundOn;soundBtn.innerHTML='<span>♫</span> SOUND: '+(soundOn?'ON':'OFF');if(soundOn)tone(720,.07)});
+window.addEventListener('keydown',e=>{if(['Space','ArrowUp','KeyW'].includes(e.code)){e.preventDefault();if(!e.repeat)jump()}if(e.code==='Enter'&&state!=='running')start()});
+reset();draw();
+})();
+</script>
+</body>
+</html>
