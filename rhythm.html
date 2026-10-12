@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b18">
+<meta name="description" content="Play REDCORE Neon Rhythm, a neon five-lane endless rhythm game by AYUSHX.">
+<title>NEON RHYTHM 3D | REDCORE ARCADE</title>
+<style>
+:root{color-scheme:dark;--bg:#070b18;--panel:#10182b;--cyan:#38f6ff;--pink:#ff3dca;--violet:#9b7bff;--lime:#c9ff4a;--muted:#9aa9c9;--line:#293b5c}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{margin:0;min-height:100vh;color:#f4f7ff;background:radial-gradient(ellipse at 50% -10%,#1a2b50 0,#0a1021 44%,#050812 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;padding:clamp(12px,3vw,28px) 12px calc(20px + env(safe-area-inset-bottom))}
+button{font:inherit}
+.wrap{width:min(980px,100%);margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.brand{font-weight:1000;font-size:clamp(1.1rem,4vw,1.7rem);letter-spacing:.14em;text-shadow:0 0 20px #38f6ff55}
+.brand b{color:var(--cyan)}
+.back{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--cyan);border:1px solid #38f6ff66;border-radius:11px;padding:10px 13px;font-weight:800;font-size:.85rem;background:#0c1728}
+.hero{text-align:center;margin:8px auto 22px}
+.eyebrow{font-size:.7rem;font-weight:900;letter-spacing:.28em;color:var(--cyan);text-transform:uppercase}
+h1{font-size:clamp(2rem,8vw,4.3rem);line-height:.98;margin:10px 0 12px;letter-spacing:-.055em;text-shadow:0 0 32px #38f6ff25}
+h1 span{background:linear-gradient(95deg,#42f6ff,#bd8aff 52%,#ff5dd6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0 auto;color:#aebbd6;max-width:580px;line-height:1.6;font-size:.96rem}
+.panel{background:linear-gradient(145deg,#111b30eF,#080e1dee);border:1px solid #314364;border-radius:20px;box-shadow:0 18px 55px #0005,inset 0 1px #ffffff08}
+.lobby{padding:clamp(15px,3vw,25px)}
+.section-title{font-size:.78rem;color:#aebbd6;font-weight:900;letter-spacing:.18em;text-transform:uppercase;margin:0 0 13px}
+.song-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.song-card{position:relative;overflow:hidden;text-align:left;color:#f5f8ff;background:linear-gradient(150deg,#15223c,#0b1120);border:1px solid #2b3e61;border-radius:15px;padding:15px 12px;min-height:124px;cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s;touch-action:manipulation}
+.song-card:before{content:"";position:absolute;width:120px;height:120px;right:-50px;top:-55px;border-radius:50%;background:var(--song-color,#38f6ff);filter:blur(42px);opacity:.19;pointer-events:none}
+.song-card strong,.song-card small,.song-card .song-icon{position:relative;display:block}
+.song-card .song-icon{font-size:1.35rem;margin-bottom:11px;color:var(--song-color,#38f6ff);text-shadow:0 0 18px currentColor}
+.song-card strong{font-size:.88rem;letter-spacing:.04em}
+.song-card small{color:#9eacc8;margin-top:5px;font-size:.73rem}
+.song-card.selected{border-color:var(--song-color,#38f6ff);box-shadow:0 0 0 1px var(--song-color,#38f6ff),0 0 24px color-mix(in srgb,var(--song-color,#38f6ff) 17%,transparent);transform:translateY(-2px)}
+.song-card.selected:after{content:"SELECTED";position:absolute;right:9px;top:9px;color:var(--song-color,#38f6ff);font-size:.55rem;font-weight:1000;letter-spacing:.1em}
+.howto{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.tip{border:1px solid #263856;border-radius:13px;padding:12px;display:flex;gap:10px;align-items:flex-start;background:#0910208c;color:#aebbd6;font-size:.8rem;line-height:1.45}
+.tip .num{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:9px;background:#142b40;color:var(--cyan);font-weight:950}
+.tip b{display:block;color:#f4f7ff;margin-bottom:3px}
+.primary{border:0;border-radius:12px;padding:14px 20px;background:linear-gradient(100deg,var(--cyan),#8effda);color:#06111b;font-weight:1000;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 24px #38f6ff25;touch-action:manipulation}
+.primary:active{transform:scale(.985)}
+.primary:focus-visible,.song-card:focus-visible,.back:focus-visible,.lane:focus-visible{outline:2px solid white;outline-offset:3px}
+.start-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.start-row .note{font-size:.75rem;color:#8798b7;line-height:1.5;max-width:400px}
+.game{display:none}
+.game.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.stat{padding:10px 8px;text-align:center;border:1px solid #293b5c;border-radius:12px;background:linear-gradient(145deg,#111c32,#0a1121)}
+.stat small{display:block;color:#8496b6;text-transform:uppercase;letter-spacing:.12em;font-size:.57rem;font-weight:900}
+.stat strong{display:block;margin-top:4px;font-size:clamp(1rem,3.6vw,1.45rem);font-variant-numeric:tabular-nums;color:#f6f9ff}
+.stat.score strong{color:var(--cyan)}.stat.combo strong{color:var(--lime)}.stat.lives strong{color:#ff6cae}
+.stage-shell{padding:10px;position:relative;overflow:hidden}
+.stage-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 4px 12px;color:#aab8d2;font-size:.72rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
+.stage-head strong{color:var(--cyan)}
+#playfield{height:clamp(420px,66vh,640px);min-height:420px;position:relative;overflow:hidden;border:1px solid #243757;border-radius:12px;background:radial-gradient(ellipse at 50% 0,#1a2d4a 0,#080f20 53%,#050916 100%);isolation:isolate;touch-action:pan-y}
+#playfield:before{content:"";position:absolute;inset:0;z-index:0;background:repeating-linear-gradient(0deg,transparent 0 43px,#6d8cbd0b 44px 45px),radial-gradient(ellipse at 50% 90%,#18335450,transparent 60%);pointer-events:none}
+#playfield:after{content:"";position:absolute;z-index:3;inset:0;pointer-events:none;box-shadow:inset 0 0 45px #0009,inset 0 0 1px #38f6ff70}
+.board-perspective{position:absolute;inset:0;perspective:850px;perspective-origin:50% 55%;z-index:1}
+.board{position:absolute;inset:-1% 0 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));transform:rotateX(10deg) scale(1.025);transform-origin:50% 100%;transform-style:preserve-3d}
+.lane{position:relative;display:block;min-width:0;height:100%;padding:0;overflow:hidden;cursor:pointer;touch-action:manipulation;background:linear-gradient(180deg,#101a2eaa,#111c34cc 70%,#0b1223);border:0;border-right:1px solid #344968;box-shadow:inset 0 0 22px #0004}
+.lane:first-child{border-left:1px solid #344968}
+.lane:nth-child(odd){background:linear-gradient(180deg,#14213aaa,#0c1528dd 72%,#10182b)}
+.lane:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,#38f6ff08 80%,#38f6ff14);pointer-events:none}
+.lane .lane-edge{position:absolute;left:0;right:0;bottom:0;height:26%;background:linear-gradient(0deg,#38f6ff0c,transparent);pointer-events:none}
+.lane .keycap{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);z-index:4;display:grid;place-items:center;width:30px;height:27px;border:1px solid #547092;border-radius:7px;background:#0b1426d9;color:#d5e5ff;font-weight:1000;font-size:.72rem;box-shadow:0 4px 0 #030711,0 0 12px #38f6ff10}
+.tile{position:absolute;left:7%;width:86%;height:9%;min-height:33px;top:-13%;border-radius:9px;border:1px solid var(--tile-color,#38f6ff);background:linear-gradient(160deg,color-mix(in srgb,var(--tile-color,#38f6ff) 32%,#15223b),color-mix(in srgb,var(--tile-color,#38f6ff) 10%,#071020));box-shadow:0 0 10px color-mix(in srgb,var(--tile-color,#38f6ff) 62%,transparent),0 0 27px color-mix(in srgb,var(--tile-color,#38f6ff) 28%,transparent),inset 0 1px #ffffff9c,inset 0 -9px 18px #0005;transform:translateZ(24px) rotateX(-8deg);will-change:top,filter;pointer-events:none}
+.tile:before{content:"";position:absolute;left:9%;right:9%;top:4px;height:2px;border-radius:100%;background:#ffffffc9;box-shadow:0 0 8px var(--tile-color,#38f6ff)}
+.tile:after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(110deg,transparent 18%,#ffffff1c 42%,transparent 68%)}
+.tile.hit{opacity:0;filter:brightness(2.8);transform:translateZ(44px) scale(1.15);transition:opacity .12s,transform .12s}
+.hitline{position:absolute;left:0;right:0;top:78%;height:3px;z-index:2;background:linear-gradient(90deg,transparent,#38f6ff 10%,#fff 50%,#ff3dca 90%,transparent);box-shadow:0 0 8px #38f6ff,0 0 22px #38f6ff85;pointer-events:none}
+.hitline:before{content:"HIT ZONE";position:absolute;right:9px;bottom:7px;color:#b7faff;font-size:.56rem;font-weight:1000;letter-spacing:.17em;text-shadow:0 0 10px #38f6ff}
+#feedback{position:absolute;z-index:5;left:50%;top:63%;transform:translate(-50%,-50%);font-size:clamp(1.2rem,5vw,2.2rem);font-weight:1000;letter-spacing:.1em;color:#fff;text-shadow:0 0 12px currentColor;opacity:0;pointer-events:none;white-space:nowrap}
+#feedback.show{animation:feedback .52s ease-out}
+@keyframes feedback{0%{opacity:1;transform:translate(-50%,-40%) scale(.8)}25%{opacity:1;transform:translate(-50%,-55%) scale(1.08)}100%{opacity:0;transform:translate(-50%,-90%) scale(1.1)}}
+#flash{position:absolute;inset:0;z-index:4;opacity:0;pointer-events:none;background:radial-gradient(ellipse at 50% 78%,#38f6ff32,transparent 60%)}
+#flash.active{animation:flash .23s ease-out}
+@keyframes flash{0%{opacity:1}100%{opacity:0}}
+.lane.pressed{filter:brightness(1.7);background-color:#38f6ff22}
+.game-controls{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.small-btn{padding:10px 13px;border:1px solid #314565;border-radius:10px;color:#cbd7ee;background:#0d1629;font-size:.78rem;font-weight:850;cursor:pointer}
+.small-btn:active{transform:scale(.98)}
+.game-hint{font-size:.75rem;color:#8798b7;line-height:1.5}
+.end-screen{position:absolute;z-index:10;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;background:#050a17d9;backdrop-filter:blur(9px);text-align:center}
+.end-screen[hidden]{display:none}
+.end-card{width:min(400px,100%);padding:23px 18px;border:1px solid #385176;border-radius:19px;background:linear-gradient(150deg,#14213a,#090f1d);box-shadow:0 0 55px #38f6ff15}
+.end-card h2{font-size:clamp(1.8rem,7vw,2.6rem);margin:8px 0;color:#fff;text-shadow:0 0 22px #ff3dca55}
+.end-card p{color:#aab8d2;line-height:1.5;font-size:.9rem}
+.final-score{font-size:2.5rem!important;font-weight:1000;color:var(--cyan)!important;margin:8px 0!important}
+.end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:16px 0}
+.end-stats div{background:#081020;border:1px solid #293b5c;border-radius:10px;padding:10px 5px}
+.end-stats small{display:block;font-size:.6rem;color:#91a2c0;text-transform:uppercase;letter-spacing:.1em}
+.end-stats strong{display:block;margin-top:5px}
+.footer{text-align:center;margin:22px 0 0;color:#7182a1;font-size:.72rem;line-height:1.8;letter-spacing:.08em}
+.watermark{color:#f0f5ff;font-weight:1000;letter-spacing:.17em;text-shadow:0 0 8px #38f6ff90,0 0 17px #38f6ff45}
+.social{display:flex;align-items:center;justify-content:center;gap:8px;width:max-content;max-width:100%;margin:7px auto 0;color:#ff83e4;text-decoration:none;font-size:.78rem;font-weight:900;letter-spacing:.08em;text-shadow:0 0 12px #ff3dca60}
+.social svg{width:21px;height:21px;filter:drop-shadow(0 0 4px #ff3dca) drop-shadow(0 0 8px #8b5cff);flex:none}
+.social:hover{color:#fff}
+.hidden{display:none!important}
+@media(max-width:620px){
+ body{padding:12px 9px calc(16px + env(safe-area-inset-bottom))}
+ .topbar{margin-bottom:18px}.hero{margin-bottom:17px}.hero p{font-size:.86rem}
+ .song-grid{grid-template-columns:1fr;gap:8px}
+ .song-card{min-height:0;display:grid;grid-template-columns:35px 1fr;align-items:center;column-gap:10px;padding:12px}
+ .song-card .song-icon{grid-row:span 2;margin:0;font-size:1.25rem}
+ .song-card strong{font-size:.82rem}.song-card small{margin-top:3px}
+ .howto{grid-template-columns:1fr 1fr;gap:7px;margin:13px 0}
+ .tip{padding:9px;gap:7px;font-size:.72rem}.tip .num{width:25px;height:25px;flex-basis:25px}
+ .stats{gap:5px}.stat{padding:9px 3px}.stat small{font-size:.5rem;letter-spacing:.07em}.stat strong{font-size:1.02rem}
+ #playfield{height:min(65vh,610px);height:max(430px, min(65dvh,610px));min-height:430px}
+ .stage-shell{padding:7px}.stage-head{font-size:.62rem;letter-spacing:.08em}
+ .tile{left:5%;width:90%;border-radius:6px;height:8%;min-height:28px}
+ .lane .keycap{bottom:9px;width:25px;height:24px;font-size:.65rem}
+ .start-row{align-items:stretch}.start-row .primary{width:100%}.start-row .note{max-width:none}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar" aria-label="Game navigation">
+    <div class="brand">REDCORE <b>ARCADE</b></div>
+    <a class="back" href="index.html">← All Games</a>
+  </nav>
+  <header class="hero">
+    <div class="eyebrow">Original synth rhythm · Endless survival</div>
+    <h1>NEON <span>RHYTHM 3D</span></h1>
+    <p>Five lanes. One beat. Keep your streak alive. Hit every neon tile on the line and survive as the music gets faster.</p>
+  </header>
+
+  <section class="panel lobby" id="lobby" aria-labelledby="song-heading">
+    <h2 class="section-title" id="song-heading">01 / Choose your soundscape</h2>
+    <div class="song-grid" id="songGrid">
+      <button class="song-card selected" type="button" data-song="drive" style="--song-color:#38f6ff" aria-pressed="true">
+        <span class="song-icon">◈</span><strong>CYBER DRIVE</strong><small>Electro pulse · 112 BPM</small>
+      </button>
+      <button class="song-card" type="button" data-song="pulse" style="--song-color:#ff56d6" aria-pressed="false">
+        <span class="song-icon">✦</span><strong>NEON PULSE</strong><small>Synthwave · 124 BPM</small>
+      </button>
+      <button class="song-card" type="button" data-song="starfall" style="--song-color:#a993ff" aria-pressed="false">
+        <span class="song-icon">✧</span><strong>STARFALL</strong><small>Dreamwave · 96 BPM</small>
+      </button>
+    </div>
+    <h2 class="section-title" style="margin-top:22px">02 / How to play</h2>
+    <div class="howto">
+      <div class="tip"><span class="num">1</span><div><b>Tap on the line</b>Hit a tile when its center reaches the glowing target line.</div></div>
+      <div class="tip"><span class="num">2</span><div><b>Build your combo</b>Perfect timing raises your score multiplier and streak.</div></div>
+      <div class="tip"><span class="num">3</span><div><b>Stay alive</b>You have five misses. The pace and note patterns ramp up over time.</div></div>
+      <div class="tip"><span class="num">4</span><div><b>Play your way</b>Touch any lane, or use A S D F G / keys 1–5 on a keyboard.</div></div>
+    </div>
+    <div class="start-row">
+      <div class="note">Original music is synthesized live in your browser. Headphones recommended. Best score is saved on this device.</div>
+      <button class="primary" id="startBtn" type="button">▶ START RUN</button>
+    </div>
+  </section>
+
+  <section class="game" id="game" aria-label="Rhythm game">
+    <div class="stats">
+      <div class="stat score"><small>Score</small><strong id="score">0</strong></div>
+      <div class="stat combo"><small>Combo</small><strong id="combo">0×</strong></div>
+      <div class="stat"><small>Accuracy</small><strong id="accuracy">100%</strong></div>
+      <div class="stat lives"><small>Misses left</small><strong id="lives">5</strong></div>
+      <div class="stat"><small>Best</small><strong id="best">0</strong></div>
+    </div>
+    <div class="panel stage-shell">
+      <div class="stage-head"><span id="trackLabel">CYBER DRIVE</span><span>LEVEL <strong id="level">01</strong> · <strong id="bpm">112 BPM</strong></span></div>
+      <div id="playfield" aria-label="Five-lane falling tile play area">
+        <div class="board-perspective">
+          <div class="board" id="board">
+            <button type="button" class="lane" data-lane="0" aria-label="Lane 1, A key"><span class="lane-edge"></span><span class="keycap">A</span></button>
+            <button type="button" class="lane" data-lane="1" aria-label="Lane 2, S key"><span class="lane-edge"></span><span class="keycap">S</span></button>
+            <button type="button" class="lane" data-lane="2" aria-label="Lane 3, D key"><span class="lane-edge"></span><span class="keycap">D</span></button>
+            <button type="button" class="lane" data-lane="3" aria-label="Lane 4, F key"><span class="lane-edge"></span><span class="keycap">F</span></button>
+            <button type="button" class="lane" data-lane="4" aria-label="Lane 5, G key"><span class="lane-edge"></span><span class="keycap">G</span></button>
+          </div>
+        </div>
+        <div class="hitline"></div><div id="feedback" aria-live="polite"></div><div id="flash"></div>
+        <div class="end-screen" id="endScreen" hidden>
+          <div class="end-card">
+            <div class="eyebrow">Run complete</div>
+            <h2 id="endTitle">GAME OVER</h2>
+            <p class="final-score" id="finalScore">0</p>
+            <p id="endMessage">The beat goes on. Try another run.</p>
+            <div class="end-stats">
+              <div><small>Accuracy</small><strong id="finalAccuracy">0%</strong></div>
+              <div><small>Best combo</small><strong id="finalCombo">0×</strong></div>
+              <div><small>Rank</small><strong id="finalRank">C</strong></div>
+            </div>
+            <button class="primary" id="restartBtn" type="button">↻ PLAY AGAIN</button>
+            <button class="small-btn" id="songsBtn" type="button" style="margin:10px 0 0;width:100%">Choose another track</button>
+          </div>
+        </div>
+      </div>
+      <div class="game-controls">
+        <div class="game-hint">A S D F G or 1–5 · tap a lane near the hit line</div>
+        <button class="small-btn" id="pauseBtn" type="button">Ⅱ Pause</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="watermark">REDCORE ARCADE · BUILT BY AYUSHX</div>
+    <div>DESIGNED FOR MOBILE & DESKTOP · KEEP THE BEAT ALIVE</div>
+    <a class="social" href="https://www.instagram.com/_ayush_045__/" target="_blank" rel="noopener noreferrer" aria-label="Follow AYUSHX on Instagram">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.6" cy="6.6" r="1.2" fill="currentColor"/></svg>
+      @_ayush_045__
+    </a>
+  </footer>
+</div>
+<script>
+(function(){
+'use strict';
+const tracks={
+ drive:{name:'CYBER DRIVE',bpm:112,root:0,scale:[0,3,5,7,10],wave:'sawtooth',color:'#38f6ff',kick:0.95},
+ pulse:{name:'NEON PULSE',bpm:124,root:3,scale:[0,2,5,7,9],wave:'square',color:'#ff56d6',kick:1.05},
+ starfall:{name:'STARFALL',bpm:96,root:5,scale:[0,2,4,7,11],wave:'triangle',color:'#a993ff',kick:0.8}
+};
+const laneEls=Array.from(document.querySelectorAll('.lane'));
+const songButtons=Array.from(document.querySelectorAll('.song-card'));
+const $=id=>document.getElementById(id);
+let selected='drive',audioCtx=null,noiseBuffer=null,audioStart=0,gameStart=0,raf=0,playing=false,paused=false;
+let notes=[],nextHitAt=0,beatIndex=0,score=0,combo=0,bestCombo=0,hits=0,judged=0,misses=0,highScore=0,elapsedBeforePause=0,pauseAt=0,runStart=0;
+const TRAVEL=2200,WINDOWS={perfect:55,great:105,good:165,miss:190};
+const laneKeys=['a','s','d','f','g'];
+const laneColors=['#38f6ff','#ff56d6','#a993ff','#c9ff4a','#ff9c5b'];
+try{highScore=Number(localStorage.getItem('redcore-neon-rhythm-highscore-v1'))||0}catch(e){}
+$('best').textContent=String(highScore);
+function pickTrack(id){selected=id;songButtons.forEach(btn=>{const yes=btn.dataset.song===id;btn.classList.toggle('selected',yes);btn.setAttribute('aria-pressed',String(yes))})}
+songButtons.forEach(btn=>btn.addEventListener('click',()=>pickTrack(btn.dataset.song)));
+function initAudio(){
+ if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)throw new Error('Web Audio is not supported in this browser.');audioCtx=new AC();noiseBuffer=audioCtx.createBuffer(1,audioCtx.sampleRate, audioCtx.sampleRate);const data=noiseBuffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1}
+ if(audioCtx.state==='suspended')return audioCtx.resume();
+ return Promise.resolve();
+}
+function tone(freq,when,duration,wave,volume,slide){
+ if(!audioCtx)return;const t=Math.max(when,audioCtx.currentTime+0.004),osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();
+ osc.type=wave||'sine';osc.frequency.setValueAtTime(Math.max(25,freq),t);if(slide)osc.frequency.exponentialRampToValueAtTime(Math.max(25,slide),t+duration);
+ filter.type='lowpass';filter.frequency.setValueAtTime(4200,t);filter.frequency.exponentialRampToValueAtTime(700,t+duration);
+ gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),t+.012);gain.gain.exponentialRampToValueAtTime(.0001,t+duration);
+ osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc.start(t);osc.stop(t+duration+.025);
+}
+function noise(when,duration,volume,cutoff){
+ if(!audioCtx||!noiseBuffer)return;const t=Math.max(when,audioCtx.currentTime+.004),src=audioCtx.createBufferSource(),filter=audioCtx.createBiquadFilter(),gain=audioCtx.createGain();
+ src.buffer=noiseBuffer;filter.type='highpass';filter.frequency.setValueAtTime(cutoff||2500,t);gain.gain.setValueAtTime(volume,t);gain.gain.exponentialRampToValueAtTime(.0001,t+duration);
+ src.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);src.start(t);src.stop(t+duration+.01);
+}
+function playDrums(when,index){
+ const tr=tracks[selected];
+ if(index%4===0||index%4===2)tone(120*tr.kick,when,.22,'sine',.22,42);
+ if(index%4===1||index%4===3)noise(when,.13,.11,1100);
+ noise(when,.035,.035,7600);
+}
+function playNoteSound(lane,when,soft){
+ const tr=tracks[selected],midi=48+tr.root+tr.scale[lane],freq=440*Math.pow(2,(midi-69)/12);
+ tone(freq,when,.19,tr.wave,soft?.055:.105,freq*1.006);
+ if(selected==='pulse')tone(freq*2,when,.11,'sine',soft?.014:.025,freq*2.01);
+}
+function playTap(lane){
+ if(!audioCtx)return;
+ const freq=440*Math.pow(2,((48+tracks[selected].root+tracks[selected].scale[lane])-69)/12);
+ tone(freq,audioCtx.currentTime,.16,tracks[selected].wave,.07,freq*1.01);
+}
+function bpmAt(ms){return Math.min(180,tracks[selected].bpm+Math.floor(Math.max(0,ms)/25000)*4)}
+function addNote(lane,hitAt,index){
+ const el=document.createElement('span');el.className='tile';el.style.setProperty('--tile-color',laneColors[lane]);el.setAttribute('aria-hidden','true');laneEls[lane].appendChild(el);
+ notes.push({lane,hitAt,spawnAt:hitAt-TRAVEL,index,el,judged:false,audioScheduled:false});
+}
+function makeBeat(){
+ const level=Math.floor(nextHitAt/25000);
+ const main=(beatIndex*3+Math.floor(beatIndex/4)*2+({drive:0,pulse:2,starfall:4}[selected]))%5;
+ addNote(main,nextHitAt,beatIndex);
+ const pairChance=level>=3?3:level>=1?4:0;
+ if(pairChance&&beatIndex%pairChance===pairChance-1){
+   const second=(main+2+(beatIndex%2))%5;
+   addNote(second,nextHitAt,beatIndex);
+ }
+ nextHitAt+=60000/bpmAt(nextHitAt);
+ beatIndex++;
+}
+function clearNotes(){notes.forEach(n=>n.el.remove());notes=[];laneEls.forEach(l=>l.classList.remove('pressed'))}
+function updateStats(){
+ $('score').textContent=score.toLocaleString();
+ $('combo').textContent=combo+'×';
+ $('accuracy').textContent=(judged?Math.round(hits/judged*100):100)+'%';
+ $('lives').textContent=Math.max(0,5-misses);
+ $('best').textContent=Math.max(highScore,score).toLocaleString();
+ $('level').textContent=String(Math.floor(runElapsed()/25000)+1).padStart(2,'0');
+ $('bpm').textContent=bpmAt(runElapsed())+' BPM';
+}
+function runElapsed(){return (playing&&!paused?performance.now():pauseAt)-gameStart+elapsedBeforePause}
+function showFeedback(text,color){const f=$('feedback');f.textContent=text;f.style.color=color;f.classList.remove('show');void f.offsetWidth;f.classList.add('show');$('flash').classList.remove('active');void $('flash').offsetWidth;$('flash').classList.add('active')}
+function judgeLane(lane){
+ if(!playing||paused)return;
+ playTap(lane);
+ const now=runElapsed();let target=null,best=Infinity;
+ for(const n of notes){if(n.lane!==lane||n.judged)continue;const d=Math.abs(now-n.hitAt);if(d<best){best=d;target=n}}
+ laneEls[lane].classList.add('pressed');setTimeout(()=>laneEls[lane].classList.remove('pressed'),95);
+ if(!target||best>WINDOWS.miss){showFeedback('KEEP TIME','#aab8d2');return}
+ target.judged=true;target.el.classList.add('hit');setTimeout(()=>target.el.remove(),130);
+ judged++;hits++;combo++;bestCombo=Math.max(bestCombo,combo);
+ let points=0,label='',color='';
+ if(best<=WINDOWS.perfect){points=100;label='PERFECT';color='#38f6ff'}
+ else if(best<=WINDOWS.great){points=70;label='GREAT';color='#c9ff4a'}
+ else{points=40;label='GOOD';color='#ffbd6b'}
+ const multiplier=1+Math.floor(combo/10);
+ score+=points*multiplier;showFeedback(label+'  +'+points*multiplier,color);updateStats();
+}
+function registerMiss(n){
+ if(n.judged)return;n.judged=true;misses++;judged++;combo=0;n.el.classList.add('hit');setTimeout(()=>n.el.remove(),130);showFeedback('MISS','#ff5f8f');updateStats();
+ if(misses>=5)finishGame();
+}
+function scheduleAudio(n,elapsed){
+ if(n.audioScheduled||n.hitAt-elapsed>120)return;
+ n.audioScheduled=true;const when=audioStart+n.hitAt/1000;
+ if(!n.drumDone){n.drumDone=true;playDrums(when,n.index)}
+ playNoteSound(n.lane,when,true);
+}
+function frame(){
+ if(!playing||paused)return;
+ const elapsed=runElapsed();
+ while(nextHitAt<=elapsed+TRAVEL+1800)makeBeat();
+ for(const n of notes){
+   if(n.judged)continue;
+   scheduleAudio(n,elapsed);
+   const progress=(elapsed-n.spawnAt)/TRAVEL;
+   n.el.style.top=(-13+progress*87)+'%';
+   if(elapsed>n.hitAt+WINDOWS.miss)registerMiss(n);
+   if(!playing)break;
+ }
+ notes=notes.filter(n=>!n.judged);
+ updateStats();
+ if(playing)raf=requestAnimationFrame(frame);
+}
+async function startGame(){
+ cancelAnimationFrame(raf);clearNotes();$('endScreen').hidden=true;
+ try{await initAudio()}catch(err){alert(err.message||'Audio could not start in this browser.');return}
+ score=0;combo=0;bestCombo=0;hits=0;judged=0;misses=0;beatIndex=0;nextHitAt=TRAVEL;elapsedBeforePause=0;paused=false;playing=true;
+ gameStart=performance.now();runStart=gameStart;pauseAt=gameStart;audioStart=audioCtx.currentTime+.12;
+ $('lobby').classList.add('hidden');$('game').classList.add('active');$('pauseBtn').textContent='Ⅱ Pause';$('trackLabel').textContent=tracks[selected].name;
+ document.documentElement.style.setProperty('--cyan',tracks[selected].color);
+ updateStats();raf=requestAnimationFrame(frame);
+}
+function rankFor(acc){return acc>=98?'S':acc>=90?'A':acc>=78?'B':acc>=60?'C':'D'}
+function finishGame(){
+ if(!playing)return;playing=false;paused=false;cancelAnimationFrame(raf);
+ const acc=judged?Math.round(hits/judged*100):100;
+ const newBest=score>highScore;
+ if(newBest){highScore=score;try{localStorage.setItem('redcore-neon-rhythm-highscore-v1',String(highScore))}catch(e){}}
+ $('best').textContent=highScore.toLocaleString();$('finalScore').textContent=score.toLocaleString();$('finalAccuracy').textContent=acc+'%';$('finalCombo').textContent=bestCombo+'×';$('finalRank').textContent=rankFor(acc);
+ $('endTitle').textContent=newBest&&score>0?'NEW HIGH SCORE!':'GAME OVER';
+ $('endMessage').textContent=newBest&&score>0?'New record saved on this device. Can you top it?':'You ran out of misses. Take a breath and chase a better run.';
+ $('endScreen').hidden=false;$('pauseBtn').textContent='Ⅱ Pause';
+}
+function togglePause(){
+ if(!playing)return;
+ if(!paused){paused=true;pauseAt=performance.now();cancelAnimationFrame(raf);if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();$('pauseBtn').textContent='▶ Resume';showFeedback('PAUSED','#38f6ff')}
+ else{elapsedBeforePause+=performance.now()-pauseAt;gameStart=performance.now();paused=false;if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();audioStart=audioCtx.currentTime+.12-runElapsed()/1000;$('pauseBtn').textContent='Ⅱ Pause';raf=requestAnimationFrame(frame)}
+}
+function backToSongs(){playing=false;paused=false;cancelAnimationFrame(raf);clearNotes();$('game').classList.remove('active');$('lobby').classList.remove('hidden');$('endScreen').hidden=true}
+laneEls.forEach((lane,i)=>lane.addEventListener('pointerdown',ev=>{ev.preventDefault();judgeLane(i)}));
+document.addEventListener('keydown',ev=>{
+ if(ev.repeat)return;
+ const key=ev.key.toLowerCase();let lane=laneKeys.indexOf(key);
+ if(lane<0&&/^[1-5]$/.test(key))lane=Number(key)-1;
+ if(lane>=0){ev.preventDefault();judgeLane(lane);return}
+ if(key==='escape'&&playing){togglePause()}
+});
+$('startBtn').addEventListener('click',startGame);
+$('restartBtn').addEventListener('click',startGame);
+$('songsBtn').addEventListener('click',backToSongs);
+$('pauseBtn').addEventListener('click',togglePause);
+})();
+</script>
+</body>
+</html>
