@@ -40,6 +40,18 @@
             bottom: 0;
             width: 100%;
         }
+        @media (max-width: 600px) {
+            header { padding: 14px 12px; }
+            h1 { font-size: clamp(1.7rem, 8vw, 2.4rem); }
+            header p { font-size: .9rem; margin: 8px 0 0; }
+            .game-container { min-height: 0; padding: 12px 8px 70px; }
+            iframe { display:block; width:100%; max-width:420px; height:min(72dvh, 680px); min-height:420px; border-width:3px; }
+            footer { position:fixed; padding:7px 8px; font-size:.75rem; }
+        }
+        @media (min-width: 601px) {
+            .game-container { min-height: calc(100dvh - 150px); padding: 16px; }
+            iframe { width:min(400px, 45vw); height:min(72dvh, 680px); }
+        }
     </style>
 </head>
 <body>
