@@ -123,13 +123,14 @@ h1 span{background:linear-gradient(95deg,#42f6ff,#bd8aff 52%,#ff5dd6);-webkit-ba
     <a class="back" href="index.html">← All Games</a>
   </nav>
   <header class="hero">
-    <div class="eyebrow">Original synth rhythm · Endless survival</div>
+    <div class="eyebrow">Original synth rhythm · Endless Rush Mode</div>
     <h1>NEON <span>RHYTHM 3D</span></h1>
-    <p>Five lanes. One beat. Keep your streak alive. Hit every neon tile on the line and survive as the music gets faster.</p>
+    <p>Five lanes. One beat. Keep your streak alive. Endless survival: hit every neon tile on the line as the tempo and note patterns keep getting faster.</p>
   </header>
 
   <section class="panel lobby" id="lobby" aria-labelledby="song-heading">
     <h2 class="section-title" id="song-heading">01 / Choose your soundscape</h2>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 15px;padding:12px;border:1px solid #38f6ff55;border-radius:12px;background:#38f6ff0a;"><span style="font-size:1.2rem;color:#38f6ff;">∞</span><div><strong style="display:block;color:#f4f7ff;font-size:.85rem;">ENDLESS RUSH — SURVIVAL</strong><small style="color:#aebbd6;">No finish line. Tempo rises every 20 seconds, note patterns get denser, and the run ends when you miss five tiles.</small></div></div>
     <div class="song-grid" id="songGrid">
       <button class="song-card selected" type="button" data-song="drive" style="--song-color:#38f6ff" aria-pressed="true">
         <span class="song-icon">◈</span><strong>CYBER DRIVE</strong><small>Electro pulse · 112 BPM</small>
@@ -260,16 +261,16 @@ function playTap(lane){
  const freq=440*Math.pow(2,((48+tracks[selected].root+tracks[selected].scale[lane])-69)/12);
  tone(freq,audioCtx.currentTime,.16,tracks[selected].wave,.07,freq*1.01);
 }
-function bpmAt(ms){return Math.min(180,tracks[selected].bpm+Math.floor(Math.max(0,ms)/25000)*4)}
+function bpmAt(ms){return Math.min(220,tracks[selected].bpm+Math.floor(Math.max(0,ms)/20000)*5)}
 function addNote(lane,hitAt,index){
  const el=document.createElement('span');el.className='tile';el.style.setProperty('--tile-color',laneColors[lane]);el.setAttribute('aria-hidden','true');laneEls[lane].appendChild(el);
  notes.push({lane,hitAt,spawnAt:hitAt-TRAVEL,index,el,judged:false,audioScheduled:false});
 }
 function makeBeat(){
- const level=Math.floor(nextHitAt/25000);
+ const level=Math.floor(nextHitAt/20000);
  const main=(beatIndex*3+Math.floor(beatIndex/4)*2+({drive:0,pulse:2,starfall:4}[selected]))%5;
  addNote(main,nextHitAt,beatIndex);
- const pairChance=level>=3?3:level>=1?4:0;
+ const pairChance=level>=5?2:level>=3?3:level>=1?4:0;
  if(pairChance&&beatIndex%pairChance===pairChance-1){
    const second=(main+2+(beatIndex%2))%5;
    addNote(second,nextHitAt,beatIndex);
@@ -284,7 +285,7 @@ function updateStats(){
  $('accuracy').textContent=(judged?Math.round(hits/judged*100):100)+'%';
  $('lives').textContent=Math.max(0,5-misses);
  $('best').textContent=Math.max(highScore,score).toLocaleString();
- $('level').textContent=String(Math.floor(runElapsed()/25000)+1).padStart(2,'0');
+ $('level').textContent=String(Math.floor(runElapsed()/20000)+1).padStart(2,'0');
  $('bpm').textContent=bpmAt(runElapsed())+' BPM';
 }
 function runElapsed(){return (playing&&!paused?performance.now():pauseAt)-gameStart+elapsedBeforePause}
