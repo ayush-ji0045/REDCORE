@@ -1,60 +1,74 @@
-/* General Styles */
+/* General styles and predictable sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
-    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
     color: #333;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 header {
     text-align: center;
-    padding: 50px 20px;
+    padding: clamp(28px, 6vw, 50px) 20px;
     background: rgba(255, 255, 255, 0.8);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-    font-size: 3em;
+    font-size: clamp(2rem, 7vw, 3em);
+    line-height: 1.15;
     margin: 0;
     background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 header p {
-    font-size: 1.2em;
+    font-size: clamp(1rem, 3vw, 1.2em);
+    line-height: 1.5;
     margin: 10px 0 0;
 }
 
 main {
-    padding: 20px;
+    padding: clamp(20px, 4vw, 36px) 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 60vh;
 }
 
 .games-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+    width: 100%;
+    max-width: 1120px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    justify-items: center;
+    gap: clamp(16px, 3vw, 24px);
     perspective: 1000px;
 }
 
 .game-box {
-    width: 200px;
+    width: 100%;
+    max-width: 240px;
     height: 250px;
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.6s;
     cursor: pointer;
-}
-
-.game-box:hover {
-    transform: rotateY(180deg);
+    animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
 }
 
 .box-inner {
@@ -66,8 +80,10 @@ main {
     transition: transform 0.6s;
 }
 
-.box-front, .box-back {
+.box-front,
+.box-back {
     position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
@@ -77,12 +93,19 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 16px;
+    overflow-wrap: anywhere;
 }
 
 .box-front {
     background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24);
     color: white;
     border: 2px solid #fff;
+}
+
+.box-front h2 {
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    line-height: 1.25;
 }
 
 .box-back {
@@ -93,6 +116,7 @@ main {
 }
 
 .play-btn {
+    max-width: 100%;
     background: #ff6b6b;
     color: white;
     border: none;
@@ -103,10 +127,17 @@ main {
     transition: background 0.3s;
     text-decoration: none;
     display: inline-block;
+    text-align: center;
+    touch-action: manipulation;
 }
 
 .play-btn:hover:not(:disabled) {
     background: #ff5252;
+}
+
+.play-btn:focus-visible {
+    outline: 3px solid #253b50;
+    outline-offset: 3px;
 }
 
 .play-btn:disabled {
@@ -114,56 +145,96 @@ main {
     cursor: not-allowed;
 }
 
+/* Keep the footer in document flow so it never covers page content. */
 footer {
+    position: static;
+    width: 100%;
     text-align: center;
-    padding: 20px;
+    padding: 20px 16px;
     background: linear-gradient(45deg, #2c3e50, #34495e, #2c3e50);
     color: white;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Animations */
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+footer p {
+    margin: 8px 0;
+    line-height: 1.5;
 }
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-}
-
-.game-box {
-    animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
-}
-
-.game-box:nth-child(2) { animation-delay: 0.5s; }
-.game-box:nth-child(3) { animation-delay: 1s; }
-.game-box:nth-child(4) { animation-delay: 1.5s; }
-.game-box:nth-child(5) { animation-delay: 2s; }
 
 .instagram-logo {
     width: 32px;
     height: 32px;
-    filter: drop-shadow(0 0 5px #ff6b6b) drop-shadow(0 0 10px #ff6b6b) drop-shadow(0 0 15px #ff6b6b);
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px #ff6b6b) drop-shadow(0 0 10px #ff6b6b);
     transition: filter 0.3s ease;
 }
 
 .instagram-logo:hover {
-    filter: drop-shadow(0 0 10px #ff5252) drop-shadow(0 0 20px #ff5252) drop-shadow(0 0 30px #ff5252);
+    filter: drop-shadow(0 0 10px #ff5252) drop-shadow(0 0 20px #ff5252);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .games-container {
-        flex-direction: column;
-        align-items: center;
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+@keyframes pulse {
+    0%, 100% { scale: 1; }
+    50% { scale: 1.01; }
+}
+
+.game-box:nth-child(2) { animation-delay: 0.25s; }
+.game-box:nth-child(3) { animation-delay: 0.5s; }
+.game-box:nth-child(4) { animation-delay: 0.75s; }
+.game-box:nth-child(5) { animation-delay: 1s; }
+
+/* Flip cards only on devices with a real hover pointer.
+   On touchscreens, keep the Play Now link visible and easy to tap. */
+@media (hover: hover) and (pointer: fine) {
+    .game-box:hover {
+        transform: rotateY(180deg);
     }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 30px 16px;
+    }
+
+    main {
+        padding: 20px 16px 28px;
+    }
+
+    .games-container {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+
     .game-box {
-        width: 150px;
-        height: 200px;
+        max-width: 320px;
+        height: 220px;
+    }
+
+    #about-us {
+        padding: 24px 18px;
+        line-height: 1.65;
+        overflow-wrap: anywhere;
+    }
+
+    footer {
+        padding: 18px 12px;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
     }
 }
