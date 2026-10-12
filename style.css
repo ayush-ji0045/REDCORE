@@ -308,3 +308,39 @@ footer p:last-of-type { color: #d9e6fa; letter-spacing: .12em; font-size: .85rem
         transition-duration: .01ms !important;
     }
 }
+
+
+/* Responsive viewport + device-specific arcade layout */
+img, canvas, video, iframe { max-width: 100%; }
+button, a { -webkit-tap-highlight-color: transparent; }
+@media (min-width: 1100px) {
+  .games-container { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .game-box { max-width: none; height: auto; aspect-ratio: 4 / 5; }
+}
+@media (min-width: 601px) and (max-width: 1099px) {
+  .games-container { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .game-box { max-width: none; height: auto; aspect-ratio: 4 / 5; }
+}
+@media (max-width: 600px) {
+  html, body { width: 100%; min-width: 0; }
+  body { background-attachment: scroll; }
+  header { padding: 28px 16px 25px; }
+  header h1 { font-size: clamp(1.8rem, 8vw, 2.6rem); overflow-wrap: anywhere; }
+  header p { margin-top: 11px; font-size: .94rem; line-height: 1.55; }
+  main { padding: 22px 12px 28px; }
+  .games-container { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .game-box { width: 100%; max-width: none; height: auto; aspect-ratio: 4 / 5; animation-duration: 6s; }
+  .box-front, .box-back { padding: 12px 9px; border-radius: 13px; }
+  .box-front::before, .box-back::before { inset: 5px; border-radius: 9px; }
+  .box-front h2, .box-back h2 { font-size: clamp(.9rem, 3.7vw, 1.12rem); line-height: 1.2; margin: 8px 0; }
+  .box-front p, .box-back p { font-size: .76rem; line-height: 1.4; margin-top: 5px; }
+  .play-btn { padding: 9px 8px; font-size: .68rem; letter-spacing: .02em; border-radius: 8px; }
+  #about-us { width: calc(100% - 24px); padding: 20px 16px; border-radius: 15px; }
+  footer { padding: 20px 12px; }
+}
+@media (max-width: 360px) {
+  .games-container { gap: 9px; }
+  .box-front, .box-back { padding: 10px 7px; }
+  .box-front p, .box-back p { font-size: .7rem; }
+  .play-btn { font-size: .62rem; }
+}
