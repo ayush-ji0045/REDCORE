@@ -113,6 +113,41 @@ h1 span{background:linear-gradient(95deg,#42f6ff,#bd8aff 52%,#ff5dd6);-webkit-ba
  .lane .keycap{bottom:9px;width:25px;height:24px;font-size:.65rem}
  .start-row{align-items:stretch}.start-row .primary{width:100%}.start-row .note{max-width:none}
 }
+
+/* Device-aware game framing: tall and touch-first on phones, wider on desktop. */
+@media (min-width: 621px) {
+ body { padding-left: clamp(18px, 3vw, 40px); padding-right: clamp(18px, 3vw, 40px); }
+ .wrap { width: min(1100px, 100%); }
+ #playfield { height: clamp(480px, 68dvh, 700px); min-height: 480px; aspect-ratio: 3 / 4; }
+ .song-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+ html, body { width: 100%; min-width: 0; overflow-x: hidden; }
+ .wrap { width: 100%; }
+ .topbar { gap: 8px; }
+ .brand { letter-spacing: .08em; font-size: clamp(1rem, 4.8vw, 1.35rem); }
+ .back { padding: 9px 10px; font-size: .78rem; white-space: nowrap; }
+ .hero h1 { font-size: clamp(2rem, 10vw, 3rem); }
+ .panel { border-radius: 15px; }
+ .lobby { padding: 13px; }
+ .howto { grid-template-columns: 1fr; }
+ .stats { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+ .stat { min-width: 0; padding: 8px 2px; }
+ .stat small { font-size: clamp(.43rem, 1.8vw, .55rem); letter-spacing: .035em; }
+ .stat strong { font-size: clamp(.82rem, 3.5vw, 1rem); }
+ .stage-shell { padding: 6px; }
+ #playfield { width: 100%; height: max(390px, min(64dvh, 590px)); min-height: 390px; aspect-ratio: 9 / 16; }
+ .game-controls { align-items: stretch; }
+ .game-controls .small-btn { flex: 1 1 auto; }
+ .game-hint { flex: 1 1 100%; }
+ .footer { margin-top: 16px; }
+}
+@media (max-width: 380px) {
+ body { padding-left: 7px; padding-right: 7px; }
+ .stats { gap: 3px; }
+ .stage-head { letter-spacing: .035em; }
+ .hitline:before { font-size: .48rem; }
+}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
