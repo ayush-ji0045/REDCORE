@@ -409,3 +409,27 @@ $('pauseBtn').addEventListener('click',togglePause);
 </script>
 </body>
 </html>
+
+/* Compact landscape play on phones: keep the full stage and controls in view. */
+@media (max-width: 620px) and (orientation: landscape) and (max-height: 520px) {
+ body { padding-top: 7px; padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+ .topbar { margin-bottom: 8px; }
+ .hero { margin: 0 auto 10px; }
+ .hero h1 { font-size: clamp(1.55rem, 5vw, 2.2rem); margin: 5px 0; }
+ .hero p { font-size: .75rem; line-height: 1.35; }
+ .lobby { padding: 10px; }
+ .song-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ .song-card { display: block; min-height: 72px; padding: 9px; }
+ .song-card .song-icon { margin-bottom: 5px; }
+ .howto { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 8px 0; }
+ .tip { font-size: .65rem; padding: 6px; }
+ .stats { margin-bottom: 6px; }
+ .stat { padding: 5px 2px; }
+ .stat strong { margin-top: 2px; }
+ .stage-head { padding-bottom: 6px; }
+ #playfield { height: max(230px, calc(100dvh - 190px)); min-height: 230px; aspect-ratio: 16 / 9; }
+ .game-controls { margin-top: 7px; }
+ .small-btn { padding: 7px 10px; }
+ .footer { margin-top: 8px; }
+}
+
