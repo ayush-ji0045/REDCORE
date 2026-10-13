@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070a12">
+  <meta name="description" content="Discover the REDCORE universe: games, creativity, the mission, and the community behind the arcade.">
+  <title>About REDCORE — Play · Explore · Repeat</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .about-page { width:min(1120px,100%); margin:0 auto; padding:clamp(24px,5vw,64px) clamp(16px,4vw,30px) 70px; }
+    .about-hero { min-height:clamp(420px,66vh,650px); display:grid; place-items:center; position:relative; overflow:hidden; isolation:isolate; text-align:center; padding:70px 18px; border:1px solid #39f5ff30; border-radius:28px; background:radial-gradient(ellipse at 20% 15%,#39f5ff20,transparent 40%),radial-gradient(ellipse at 82% 65%,#ff4fd820,transparent 42%),linear-gradient(145deg,#11192b,#090d18 72%); box-shadow:0 25px 80px #0007,inset 0 0 60px #8a6cff0b; }
+    .about-orbit { position:absolute; width:min(65vw,420px); aspect-ratio:1; border:1px solid #39f5ff45; border-radius:50%; box-shadow:0 0 42px #39f5ff12,inset 0 0 42px #ff4fd80c; transform:rotateX(68deg) rotateZ(-24deg); animation:orbit-float 11s ease-in-out infinite; pointer-events:none; }
+    .about-orbit::before,.about-orbit::after { content:""; position:absolute; inset:13%; border:1px solid #ff4fd84d; border-radius:50%; transform:rotateY(60deg); }
+    .about-orbit::after { inset:27%; border-color:#8a6cff88; transform:rotateY(-65deg) rotateX(22deg); }
+    .about-hero-content { position:relative; z-index:1; max-width:760px; }
+    .eyebrow { display:inline-flex; gap:9px; align-items:center; padding:8px 12px; border:1px solid #39f5ff45; border-radius:999px; color:#9dfaff; background:#39f5ff0b; font-size:.72rem; font-weight:850; letter-spacing:.18em; }
+    .eyebrow::before { content:""; width:7px; height:7px; background:#39f5ff; border-radius:50%; box-shadow:0 0 12px #39f5ff; }
+    .about-hero h1 { margin:24px 0 16px; font-size:clamp(2.7rem,9vw,6.4rem); line-height:.98; letter-spacing:-.055em; font-weight:950; color:#f7fbff; }
+    .about-hero h1 span { background:linear-gradient(100deg,#39f5ff,#a58bff 55%,#ff70df); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 22px #39f5ff20); }
+    .about-hero p { max-width:620px; margin:0 auto; color:#b5c3db; font-size:clamp(1rem,2.7vw,1.2rem); line-height:1.8; }
+    .hero-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:28px; }
+    .about-action { display:inline-flex; justify-content:center; align-items:center; min-height:46px; padding:12px 18px; border-radius:11px; text-decoration:none; font-weight:850; font-size:.9rem; transition:transform .2s,box-shadow .2s; }
+    .about-action.primary { color:#06101b; background:linear-gradient(100deg,#39f5ff,#9a8aff); box-shadow:0 8px 28px #39f5ff20; }
+    .about-action.secondary { color:#e9f3ff; background:#ffffff08; border:1px solid #ffffff28; }
+    .about-action:hover { transform:translateY(-3px); box-shadow:0 12px 28px #0005; }
+    .about-section { margin-top:clamp(48px,8vw,88px); }
+    .section-kicker { color:#ff79df; font-size:.72rem; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
+    .section-title { margin:10px 0 12px; color:#f4f8ff; font-size:clamp(1.8rem,5vw,3rem); line-height:1.1; letter-spacing:-.035em; }
+    .section-intro { max-width:680px; color:#aebdd4; line-height:1.8; margin:0; }
+    .universe-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:26px; perspective:1000px; }
+    .universe-card { min-height:235px; position:relative; overflow:hidden; padding:24px; border-radius:18px; border:1px solid #39f5ff2b; background:linear-gradient(150deg,#151d2eeb,#0c111deb); box-shadow:inset 0 1px #ffffff0b,0 16px 35px #0002; transform-style:preserve-3d; transition:border-color .25s,box-shadow .25s,transform .25s; }
+    .universe-card::after { content:""; position:absolute; width:170px; height:170px; right:-90px; top:-90px; border-radius:50%; background:var(--glow,#39f5ff); filter:blur(55px); opacity:.15; pointer-events:none; }
+    .universe-card:hover { border-color:#39f5ff80; box-shadow:0 18px 40px #0005,0 0 25px #39f5ff0b; }
+    .card-icon { width:48px; height:48px; display:grid; place-items:center; border:1px solid #39f5ff45; border-radius:14px; background:#39f5ff0b; color:#7afaff; font-size:1.35rem; box-shadow:inset 0 0 18px #39f5ff08; }
+    .universe-card h3 { margin:22px 0 9px; color:#f2f7ff; font-size:1.18rem; }
+    .universe-card p { margin:0; color:#aab9d0; line-height:1.75; font-size:.94rem; }
+    .mission-panel { display:grid; grid-template-columns:1fr .8fr; gap:28px; align-items:center; margin-top:26px; padding:clamp(22px,4vw,38px); border:1px solid #8a6cff55; border-radius:22px; background:radial-gradient(ellipse at 100% 0%,#8a6cff16,transparent 48%),linear-gradient(140deg,#15192b,#0c111e); }
+    .mission-panel h3 { margin:0 0 12px; color:#f5f7ff; font-size:clamp(1.45rem,3.5vw,2.15rem); }
+    .mission-panel p { margin:0; color:#b4c0d6; line-height:1.85; }
+    .mission-quote { padding:20px; border-left:2px solid #ff4fd8; color:#e9dfff; font-size:1.05rem; line-height:1.8; background:#ff4fd809; border-radius:0 14px 14px 0; }
+    .mission-quote span { display:block; margin-top:10px; color:#ff85e3; font-size:.72rem; font-weight:850; letter-spacing:.16em; }
+    .creator-panel { display:grid; grid-template-columns:auto 1fr; align-items:center; gap:24px; margin-top:26px; padding:clamp(22px,4vw,34px); border-radius:22px; border:1px solid #ff4fd83d; background:linear-gradient(120deg,#ff4fd80c,#101626 50%,#39f5ff09); }
+    .creator-mark { width:108px; aspect-ratio:1; display:grid; place-items:center; border-radius:28px; color:#07101b; font-size:2rem; font-weight:950; background:linear-gradient(145deg,#39f5ff,#9b85ff 58%,#ff4fd8); box-shadow:0 0 40px #8a6cff28; transform:rotate(-5deg); }
+    .creator-panel h3 { margin:0 0 8px; color:#f5f7ff; font-size:1.5rem; }
+    .creator-panel p { margin:0; color:#afbdd3; line-height:1.8; }
+    .creator-links { display:flex; flex-wrap:wrap; gap:10px; margin-top:15px; }
+    .creator-links a { color:#7cf8ff; font-size:.88rem; font-weight:800; text-decoration:none; }
+    .community-panel { display:flex; align-items:center; justify-content:space-between; gap:22px; margin-top:26px; padding:clamp(22px,4vw,38px); border-radius:22px; border:1px solid #39f5ff3d; background:radial-gradient(ellipse at 10% 0%,#39f5ff12,transparent 55%),linear-gradient(145deg,#111b2c,#0b101c); }
+    .community-panel h3 { margin:0 0 9px; color:#f4f8ff; font-size:clamp(1.35rem,3.4vw,2rem); }
+    .community-panel p { max-width:610px; margin:0; color:#aebdd3; line-height:1.8; }
+    .reveal { opacity:0; transform:translateY(26px) scale(.985); transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.2,1); }
+    .reveal.is-visible { opacity:1; transform:translateY(0) scale(1); }
+    @keyframes orbit-float { 0%,100%{transform:rotateX(68deg) rotateZ(-24deg) translateY(0)}50%{transform:rotateX(68deg) rotateZ(-12deg) translateY(-10px)} }
+    @media(max-width:760px) { .universe-grid{grid-template-columns:1fr;gap:12px}.universe-card{min-height:0;padding:21px}.universe-card h3{margin-top:16px}.mission-panel{grid-template-columns:1fr;gap:20px}.community-panel{align-items:flex-start;flex-direction:column}.about-hero{border-radius:20px;min-height:480px}.creator-mark{width:76px;border-radius:20px;font-size:1.55rem}.creator-panel{gap:17px;grid-template-columns:auto 1fr} }
+    @media(max-width:420px) { .creator-panel{grid-template-columns:1fr}.creator-mark{width:64px}.about-page{padding-inline:12px}.about-hero{padding-inline:14px}.hero-actions{flex-direction:column;align-items:stretch}.about-action{width:100%} }
+    @media(prefers-reduced-motion:reduce) { .about-orbit{animation:none}.reveal{opacity:1;transform:none;transition:none}.universe-card,.about-action{transition:none} }
+  </style>
+</head>
+<body>
+  <div id="top"></div>
+  <a class="menu-toggle" href="#site-menu" aria-label="Open navigation menu" aria-controls="site-menu" aria-expanded="false"><span></span><span></span><span></span></a>
+  <div class="menu-backdrop" hidden></div>
+  <aside class="site-menu" id="site-menu" aria-label="Main navigation" aria-hidden="true" inert>
+    <div class="menu-heading"><span>REDCORE <b>MENU</b></span><button class="menu-close" type="button" aria-label="Close navigation menu">×</button></div>
+    <a class="menu-link" href="index.html#top">⌂ <span>Home</span></a>
+    <a class="menu-link" href="index.html#games">▣ <span>Games Arcade</span></a>
+    <a class="menu-link" href="rhythm.html">♫ <span>Neon Rhythm 3D</span></a>
+    <a class="menu-link" href="about.html" aria-current="page">ⓘ <span>About Us</span></a>
+    <div class="menu-note">PLAY · EXPLORE · REPEAT</div>
+  </aside>
+
+  <main class="about-page">
+    <section class="about-hero" aria-labelledby="about-title">
+      <div class="about-orbit" aria-hidden="true"></div>
+      <div class="about-hero-content">
+        <span class="eyebrow">WELCOME TO OUR UNIVERSE</span>
+        <h1 id="about-title">PLAY BEYOND<br><span>THE ORDINARY.</span></h1>
+        <p>REDCORE is a growing playground for curious minds, bold ideas, and unforgettable game moments. Pick a world, find your rhythm, and make the next high score yours.</p>
+        <div class="hero-actions">
+          <a class="about-action primary" href="index.html#games">EXPLORE THE ARCADE ↗</a>
+          <a class="about-action secondary" href="#our-mission">DISCOVER OUR MISSION ↓</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section reveal" aria-labelledby="universe-title">
+      <span class="section-kicker">ONE UNIVERSE · MANY WAYS TO PLAY</span>
+      <h2 class="section-title" id="universe-title">More than a collection of games.</h2>
+      <p class="section-intro">Every corner of REDCORE is built around discovery. Whether you want a quick challenge or a new personal best, there is always another world to explore.</p>
+      <div class="universe-grid">
+        <article class="universe-card" style="--glow:#39f5ff">
+          <div class="card-icon" aria-hidden="true">⌘</div>
+          <h3>The Arcade Universe</h3>
+          <p>From reflex-based runs to rhythm and brain challenges, our arcade brings different kinds of fun together in one place.</p>
+        </article>
+        <article class="universe-card" style="--glow:#ff4fd8">
+          <div class="card-icon" aria-hidden="true">✦</div>
+          <h3>Built to Experiment</h3>
+          <p>We love trying new ideas, bold visuals, playful mechanics, and interactive experiences that make each visit feel fresh.</p>
+        </article>
+        <article class="universe-card" style="--glow:#8a6cff">
+          <div class="card-icon" aria-hidden="true">∞</div>
+          <h3>Your Next High Score</h3>
+          <p>Play at your own pace, learn the patterns, challenge yourself, and come back to beat the score you set yesterday.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="about-section reveal" id="our-mission" aria-labelledby="mission-title">
+      <span class="section-kicker">WHY REDCORE EXISTS</span>
+      <h2 class="section-title" id="mission-title">Our mission is simple.</h2>
+      <div class="mission-panel">
+        <div>
+          <h3>Make play feel limitless.</h3>
+          <p>Our mission is to create accessible, engaging browser experiences that bring creativity and a little excitement into everyday life. We want games to be easy to jump into, rewarding to master, and fun to share—while continuing to learn, build, and improve.</p>
+        </div>
+        <div class="mission-quote">A small idea can become a whole new world when you give it room to play.<span>THE REDCORE MINDSET</span></div>
+      </div>
+    </section>
+
+    <section class="about-section reveal" aria-labelledby="creator-title">
+      <span class="section-kicker">THE HUMAN BEHIND THE PIXELS</span>
+      <h2 class="section-title" id="creator-title">Meet the creator.</h2>
+      <div class="creator-panel">
+        <div class="creator-mark" aria-hidden="true">AX</div>
+        <div>
+          <h3>AYUSHX <span style="color:#39f5ff;font-size:.8rem">/ CREATOR</span></h3>
+          <p>REDCORE is an independent creative project built by AYUSHX, bringing together a love of games, web experiments, and neon-soaked design. The universe is still growing—and there is always another idea on the build list.</p>
+          <div class="creator-links"><a href="https://www.instagram.com/_ayush_045__/" target="_blank" rel="noopener noreferrer">Follow on Instagram ↗</a><a href="index.html#games">See what’s been built →</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section reveal" aria-labelledby="community-title">
+      <span class="section-kicker">YOU'RE PART OF THE STORY</span>
+      <div class="community-panel">
+        <div>
+          <h3 id="community-title">The next level is better together.</h3>
+          <p>Every visit, every attempt, and every shared score helps give REDCORE its energy. Explore the games, tell a friend about your favourite, and check back as the arcade keeps evolving.</p>
+        </div>
+        <a class="about-action primary" href="index.html#games">JUMP INTO THE ARCADE ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 REDCORE. Play · Explore · Repeat.</p>
+    <p>More games coming soon!</p>
+    <p>Developer AYUSHX</p>
+    <p><a href="https://www.instagram.com/_ayush_045__/" target="_blank" rel="noopener noreferrer"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="instagram-logo"></a></p>
+  </footer>
+  <script>
+    (() => {
+      const toggle = document.querySelector(".menu-toggle");
+      const menu = document.querySelector(".site-menu");
+      const close = document.querySelector(".menu-close");
+      const backdrop = document.querySelector(".menu-backdrop");
+      if (toggle && menu && close && backdrop) {
+        const setOpen = (open) => {
+          toggle.setAttribute("aria-expanded", String(open));
+          toggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+          menu.setAttribute("aria-hidden", String(!open));
+          menu.inert = !open;
+          menu.classList.toggle("is-open", open);
+          toggle.classList.toggle("is-open", open);
+          backdrop.hidden = !open;
+          document.body.classList.toggle("menu-open", open);
+          if (open) close.focus(); else toggle.focus();
+        };
+        toggle.addEventListener("click", (event) => { event.preventDefault(); setOpen(toggle.getAttribute("aria-expanded") !== "true"); });
+        close.addEventListener("click", () => setOpen(false));
+        backdrop.addEventListener("click", () => setOpen(false));
+        menu.querySelectorAll("a").forEach(link => link.addEventListener("click", () => setOpen(false)));
+        document.addEventListener("keydown", (event) => { if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") setOpen(false); });
+      }
+
+      const revealItems = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealItems.forEach(item => observer.observe(item));
+      } else {
+        revealItems.forEach(item => item.classList.add("is-visible"));
+      }
+
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.querySelectorAll(".universe-card").forEach(card => {
+          card.addEventListener("pointermove", event => {
+            const rect = card.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width;
+            const y = (event.clientY - rect.top) / rect.height;
+            card.style.transform = `perspective(850px) rotateX(${(0.5 - y) * 7}deg) rotateY(${(x - 0.5) * 7}deg) translateZ(2px)`;
+          });
+          card.addEventListener("pointerleave", () => { card.style.transform = ""; });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
