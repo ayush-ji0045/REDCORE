@@ -23,12 +23,25 @@
   document.addEventListener("click", startMusic);
   document.addEventListener("touchstart", startMusic);
 </script>
+    <div id="top"></div>
+    <a class="menu-toggle" href="#site-menu" aria-label="Open navigation menu" aria-controls="site-menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </a>
+    <div class="menu-backdrop" hidden></div>
+    <aside class="site-menu" id="site-menu" aria-label="Main navigation" aria-hidden="true" inert>
+        <div class="menu-heading"><span>REDCORE <b>MENU</b></span><button class="menu-close" type="button" aria-label="Close navigation menu">×</button></div>
+        <a class="menu-link" href="#top">⌂ <span>Home</span></a>
+        <a class="menu-link" href="#games">▣ <span>Games Arcade</span></a>
+        <a class="menu-link" href="rhythm.html">♫ <span>Neon Rhythm 3D</span></a>
+        <a class="menu-link" href="#about-us">ⓘ <span>About Us</span></a>
+        <div class="menu-note">PLAY · EXPLORE · REPEAT</div>
+    </aside>
     <header>
         <h1>Welcome to REDCORE</h1>
         <p>Enjoy our collection of fun games and apps!</p>
     </header>
     <main>
-        <div class="games-container">
+        <div class="games-container" id="games">
             <div class="game-box" id="game1">
                 <div class="box-inner">
                     <div class="box-front" style="background: linear-gradient(160deg, #7ee8fa 0%, #80ffdb 48%, #faffd1 100%); color: #123b4a; border: 1px solid #e8ffff; box-shadow: inset 0 0 28px #ffffff70;">
@@ -275,7 +288,7 @@
             </div>
         </div>
     </main>
-    <section id="about-us">
+    <section id="about-us" tabindex="-1">
         <h2>About REDCORE</h2>
         <p>At REDCORE, we believe in the power of play to ignite imagination and creativity. Our 3D games are designed to transport you to vibrant worlds where every click sparks adventure. We're passionate about pushing the boundaries of interactive entertainment, blending cutting-edge technology with timeless fun. Join us in exploring the endless possibilities of gaming – where every game is a story waiting to be told.</p>
         <p>Our mission is to create immersive experiences that not only entertain but also inspire. From the thrill of competition to the joy of discovery, REDCORE is your gateway to unforgettable moments. Stay tuned as we expand our collection with even more exciting games!</p>
@@ -286,6 +299,31 @@
         <p>Developer AYUSHX</p>
         <p><a href="https://www.instagram.com/_ayush_045__?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="instagram-logo"></a></p>
     </footer>
+    <script>
+      (() => {
+        const toggle = document.querySelector(".menu-toggle");
+        const menu = document.querySelector(".site-menu");
+        const close = document.querySelector(".menu-close");
+        const backdrop = document.querySelector(".menu-backdrop");
+        if (!toggle || !menu || !close || !backdrop) return;
+        const setOpen = (open) => {
+          toggle.setAttribute("aria-expanded", String(open));
+          toggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+          menu.setAttribute("aria-hidden", String(!open));
+          menu.inert = !open;
+          menu.classList.toggle("is-open", open);
+          toggle.classList.toggle("is-open", open);
+          backdrop.hidden = !open;
+          document.body.classList.toggle("menu-open", open);
+          if (open) close.focus(); else toggle.focus();
+        };
+        toggle.addEventListener("click", (event) => { event.preventDefault(); setOpen(toggle.getAttribute("aria-expanded") !== "true"); });
+        close.addEventListener("click", () => setOpen(false));
+        backdrop.addEventListener("click", () => setOpen(false));
+        menu.querySelectorAll("a").forEach(link => link.addEventListener("click", () => setOpen(false)));
+        document.addEventListener("keydown", (event) => { if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") setOpen(false); });
+      })();
+    </script>
     <script src="script.js"></script>
     <script>linkvertise(1459362, {whitelist: ["https://ayush-ji0045.github.io/REDCORE/"], blacklist: []});</script>
 </body>
