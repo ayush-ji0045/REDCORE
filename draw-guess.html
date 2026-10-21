@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090b16">
+  <title>Draw &amp; Guess — REDCORE</title>
+  <link rel="stylesheet" href="draw-guess.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Back to REDCORE home"><span class="brand-mark">R</span><span>REDCORE <small>PARTY PROTOCOL 007</small></span></a>
+    <div class="account"><span id="auth-status">Checking sign-in…</span><button id="sign-in" class="button button-small" hidden>Sign in with Google</button><button id="sign-out" class="button button-small button-quiet" hidden>Sign out</button></div>
+  </header>
+  <main class="shell">
+    <section id="notice" class="notice" role="status">Connecting to REDCORE…</section>
+    <section id="lobby" class="lobby panel">
+      <div class="eyebrow">DRAW · GUESS · REPEAT</div>
+      <h1>Draw <span>&amp;</span> Guess</h1>
+      <p class="lede">A live drawing party for <strong>2–8 real players</strong>. Grab your friends, make a room, and see who can guess the fastest.</p>
+      <div class="lobby-actions">
+        <button id="create-room" class="button button-primary" disabled>Create a room <span>↗</span></button>
+        <div class="join-box"><label for="room-code">Have a room code?</label><div class="join-row"><input id="room-code" maxlength="6" autocomplete="off" placeholder="ABC123" aria-label="Room code"><button id="join-room" class="button" disabled>Join room</button></div></div>
+      </div>
+      <div class="feature-row"><div><b>01</b><span>Live canvas</span></div><div><b>02</b><span>Secret words</span></div><div><b>03</b><span>Live scores</span></div></div>
+      <p class="small-note">Google sign-in is required. No bots, solo play, or practice rooms.</p>
+    </section>
+    <section id="room" class="room" hidden>
+      <div class="room-heading panel">
+        <div><div class="eyebrow" id="room-kicker">WAITING ROOM</div><h2 id="room-title">Room <span id="room-code-display">------</span></h2><p id="room-subtitle">Invite friends to join.</p></div>
+        <div class="room-controls"><button id="copy-invite" class="button">Copy invite</button><button id="leave-room" class="button button-quiet">Leave</button></div>
+      </div>
+      <div class="room-grid">
+        <aside class="sidebar panel">
+          <div class="section-title"><h3>Players</h3><span id="player-count" class="count">0 / 8</span></div>
+          <ul id="players" class="players"></ul>
+          <div id="host-controls" class="host-controls" hidden><label for="round-count">Rounds</label><select id="round-count"><option value="3">3 rounds</option><option value="5" selected>5 rounds</option><option value="8">8 rounds</option></select><button id="start-game" class="button button-primary button-full">Start game</button></div>
+          <p id="waiting-help" class="small-note">Waiting for the host to start. At least two players are needed.</p>
+        </aside>
+        <section class="play-area panel">
+          <div class="game-bar"><div><span class="eyebrow" id="round-label">LOBBY</span><h3 id="turn-title">Waiting for players…</h3></div><div class="timer" id="timer">—</div></div>
+          <div class="word-strip" id="word-strip">The drawing canvas appears when a round begins.</div>
+          <div class="canvas-wrap"><canvas id="drawing" aria-label="Shared drawing canvas"></canvas><div id="canvas-empty" class="canvas-empty"><span>✎</span><b>Your canvas is warming up</b><small>Join with a friend to start drawing.</small></div></div>
+          <div id="artist-tools" class="tools" hidden><div class="swatches" id="swatches" aria-label="Brush colors"></div><label class="brush-size">Size <input id="brush-size" type="range" min="2" max="22" value="5"></label><button id="eraser" class="tool-button">Eraser</button><button id="clear-canvas" class="tool-button">Clear</button></div>
+          <div class="chat-area"><div class="section-title"><h3>Guesses &amp; chat</h3><span class="small-note">Be quick!</span></div><div id="messages" class="messages" aria-live="polite"></div><form id="chat-form" class="chat-form"><input id="chat-input" maxlength="120" placeholder="Type your guess…" autocomplete="off" aria-label="Guess or chat message" disabled><button class="button button-primary" id="send-message" disabled>Send</button></form></div>
+        </section>
+      </div>
+    </section>
+    <section id="results" class="panel results" hidden><div class="eyebrow">GAME COMPLETE</div><h2>Nice round. <span>Big brains.</span></h2><ol id="final-scores" class="final-scores"></ol><button id="play-again" class="button button-primary">Play again</button></section>
+    <footer>REDCORE · Made for friends, not bots. <a href="index.html">Back to arcade</a></footer>
+  </main>
+  <script type="module" src="draw-guess.js"></script>
+</body>
+</html>
