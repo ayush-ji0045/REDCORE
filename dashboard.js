@@ -32,7 +32,7 @@ const levels = [
   { name: "Master", atSeconds: 25 * 60 * 60 },
   { name: "Legend", atSeconds: 50 * 60 * 60 }
 ];
-const reactorColors = ["#39f5ff", "#65ff9a", "#ffdf5a", "#ffa34a", "#ff4c98", "#b38bff", "#fff06a"];
+const reactorColors = ["#3D5AFE", "#FF2FA3", "#FF8A1E", "#AEB6C2", "#F5F7FF", "#3D5AFE", "#FF2FA3"];
 let displayedLevel = null;
 let seenLevelStorageKey = null;
 
