@@ -1,0 +1,31 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "rooms": {
+      "$roomId": {
+        ".read": "auth != null && data.child('players').child(auth.uid).exists()",
+        ".write": false,
+        "hostUid": { ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid) || data.val() === auth.uid)" },
+        "status": { ".write": "auth != null && root.child('rooms').child($roomId).child('hostUid').val() === auth.uid" },
+        "createdAt": { ".write": "auth != null && !data.exists() && root.child('rooms').child($roomId).child('hostUid').val() === auth.uid" },
+        "players": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('rooms').child($roomId).child('status').val() !== 'finished' || auth != null && root.child('rooms').child($roomId).child('hostUid').val() === auth.uid && !newData.exists()"
+          }
+        },
+        "game": {
+          ".write": "auth != null && root.child('rooms').child($roomId).child('hostUid').val() === auth.uid"
+        },
+        "drawings": {
+          ".write": "auth != null && root.child('rooms').child($roomId).child('players').child(auth.uid).exists() && root.child('rooms').child($roomId).child('game').child('artistUid').val() === auth.uid && root.child('rooms').child($roomId).child('status').val() === 'playing'"
+        },
+        "messages": {
+          "$messageId": {
+            ".write": "auth != null && root.child('rooms').child($roomId).child('players').child(auth.uid).exists() && newData.child('uid').val() === auth.uid && newData.child('text').isString() && newData.child('text').val().length <= 120"
+          }
+        }
+      }
+    }
+  }
+}
