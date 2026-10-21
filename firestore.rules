@@ -7,13 +7,15 @@ service cloud.firestore {
       }
       function validGameRecord() {
         return request.resource.data.keys().hasOnly([
-          "gameId", "title", "playCount", "bestScore", "lastScore", "lastPlayed", "updatedAt"
+          "gameId", "title", "playCount", "bestScore", "lastScore", "totalPlaySeconds", "lastPlayed", "updatedAt"
         ])
         && request.resource.data.gameId == gameId
         && request.resource.data.playCount is number
         && request.resource.data.playCount >= 0
         && request.resource.data.bestScore is number
-        && request.resource.data.bestScore >= 0;
+        && request.resource.data.bestScore >= 0
+        && request.resource.data.totalPlaySeconds is number
+        && request.resource.data.totalPlaySeconds >= 0;
       }
       allow read, delete: if ownsPlayerData();
       allow create, update: if ownsPlayerData() && validGameRecord();
