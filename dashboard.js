@@ -7,6 +7,60 @@ const emailEl = document.querySelector("#player-email");
 const photoEl = document.querySelector("#player-photo");
 const listEl = document.querySelector("#game-list");
 const countEl = document.querySelector("#game-count");
+const levelNumberEl = document.querySelector("#level-number");
+const levelNameEl = document.querySelector("#level-heading");
+const totalPlaytimeEl = document.querySelector("#total-playtime");
+const levelProgressEl = document.querySelector("#level-progress");
+const levelTrackEl = document.querySelector("#level-progress-track");
+const levelProgressCopyEl = document.querySelector("#level-progress-copy");
+const nextLevelNoteEl = document.querySelector("#next-level-note");
+
+const levels = [
+  { name: "Rookie", atSeconds: 0 },
+  { name: "Explorer", atSeconds: 60 * 60 },
+  { name: "Challenger", atSeconds: 3 * 60 * 60 },
+  { name: "Pro", atSeconds: 6 * 60 * 60 },
+  { name: "Elite", atSeconds: 12 * 60 * 60 },
+  { name: "Master", atSeconds: 25 * 60 * 60 },
+  { name: "Legend", atSeconds: 50 * 60 * 60 }
+];
+
+function formatPlaytime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (hours === 0) return `${minutes} min`;
+  if (remainingMinutes === 0) return `${hours} hr`;
+  return `${hours} hr ${remainingMinutes} min`;
+}
+
+function updateLevel(rawSeconds) {
+  const seconds = Math.max(0, Math.floor(Number(rawSeconds) || 0));
+  let index = levels.findLastIndex(level => seconds >= level.atSeconds);
+  if (index < 0) index = 0;
+  const current = levels[index];
+  const next = levels[index + 1];
+  const progress = next
+    ? Math.min(100, ((seconds - current.atSeconds) / (next.atSeconds - current.atSeconds)) * 100)
+    : 100;
+
+  levelNumberEl.textContent = `LEVEL ${index + 1}`;
+  levelNameEl.textContent = current.name;
+  totalPlaytimeEl.textContent = `${formatPlaytime(seconds)} active playtime`;
+  levelProgressEl.style.width = `${progress}%`;
+  levelTrackEl.setAttribute("aria-valuenow", String(Math.round(progress)));
+
+  if (next) {
+    const remaining = next.atSeconds - seconds;
+    levelProgressCopyEl.textContent = `${Math.floor(progress)}% to next level`;
+    nextLevelNoteEl.textContent = `${formatPlaytime(remaining)} to ${next.name}`;
+  } else {
+    levelProgressCopyEl.textContent = "Maximum level reached";
+    nextLevelNoteEl.textContent = "Legend status unlocked";
+  }
+}
+
+updateLevel(0);
 
 if (!firebaseReady) {
   nameEl.textContent = "Firebase setup needed";
@@ -23,7 +77,10 @@ if (!firebaseReady) {
 
     try {
       const snapshot = await getDocs(collection(db, "users", user.uid, "games"));
-      const games = snapshot.docs.map(item => item.data()).sort((a, b) => (b.playCount || 0) - (a.playCount || 0));
+      const games = snapshot.docs.map(item => item.data());
+      const totalPlaySeconds = games.reduce((total, game) => total + (Number(game.totalPlaySeconds) || 0), 0);
+      updateLevel(totalPlaySeconds);
+      games.sort((a, b) => (b.playCount || 0) - (a.playCount || 0));
       countEl.textContent = `${games.length} game${games.length === 1 ? "" : "s"}`;
       if (!games.length) {
         listEl.innerHTML = '<p class="empty-state">Your play history will appear here after you sign in and play a REDCORE game.</p>';
@@ -39,6 +96,11 @@ if (!firebaseReady) {
         const plays = document.createElement("span");
         plays.innerHTML = `PLAYS<b>${Number(game.playCount) || 0}</b>`;
         stats.append(plays);
+        if (Number(game.totalPlaySeconds) > 0) {
+          const playtime = document.createElement("span");
+          playtime.innerHTML = `TIME<b>${formatPlaytime(Number(game.totalPlaySeconds))}</b>`;
+          stats.append(playtime);
+        }
         if (Number(game.bestScore) > 0) {
           const score = document.createElement("span");
           score.innerHTML = `BEST SCORE<b>${Number(game.bestScore).toLocaleString()}</b>`;
