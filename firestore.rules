@@ -14,8 +14,8 @@ service cloud.firestore {
         && request.resource.data.playCount >= 0
         && request.resource.data.bestScore is number
         && request.resource.data.bestScore >= 0
-        && request.resource.data.totalPlaySeconds is number
-        && request.resource.data.totalPlaySeconds >= 0;
+        && request.resource.data.get("totalPlaySeconds", 0) is number
+        && request.resource.data.get("totalPlaySeconds", 0) >= 0;
       }
       allow read, delete: if ownsPlayerData();
       allow create, update: if ownsPlayerData() && validGameRecord();
