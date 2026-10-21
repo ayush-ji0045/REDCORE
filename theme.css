@@ -1,0 +1,93 @@
+/* REDCORE professional palette — exact colors from the supplied reference */
+:root {
+  color-scheme: dark;
+  --rc-bg: #06070A;
+  --rc-panel: #0D0F16;
+  --rc-panel-soft: #121522;
+  --rc-text: #F5F7FF;
+  --rc-muted: #AEB6C2;
+  --rc-cyan: #3D5AFE;
+  --rc-pink: #FF2FA3;
+  --rc-violet: #FF8A1E;
+  --rc-line: rgba(174,182,194,.22);
+  --bg: #06070A;
+  --panel: #0D0F16;
+  --cyan: #3D5AFE;
+  --pink: #FF2FA3;
+  --violet: #FF8A1E;
+  --lime: #FF8A1E;
+  --muted: #AEB6C2;
+  --line: rgba(174,182,194,.22);
+}
+html { background:#06070A !important; color-scheme:dark; }
+body {
+  color:#F5F7FF !important;
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(61,90,254,.15),transparent 34rem),
+    radial-gradient(ellipse at 88% 24%,rgba(255,47,163,.09),transparent 32rem),
+    radial-gradient(ellipse at 53% 95%,rgba(255,138,30,.055),transparent 36rem),
+    #06070A !important;
+}
+body::before {
+  opacity:.18 !important;
+  background-image:linear-gradient(rgba(174,182,194,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(174,182,194,.045) 1px,transparent 1px) !important;
+}
+header {
+  color:#F5F7FF !important;
+  background:linear-gradient(180deg,rgba(18,20,30,.96),rgba(6,7,10,.88)) !important;
+  border-color:rgba(61,90,254,.38) !important;
+  box-shadow:0 18px 60px rgba(0,0,0,.38) !important;
+}
+header::after { background:linear-gradient(90deg,transparent,#3D5AFE 35%,#FF2FA3 68%,#FF8A1E,transparent) !important; box-shadow:0 0 16px rgba(61,90,254,.35) !important; }
+header h1 {
+  color:#F5F7FF !important;
+  background:linear-gradient(100deg,#F5F7FF 14%,#3D5AFE 57%,#FF2FA3 88%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  filter:none !important;
+}
+header p, .help, .muted, .auth-card p { color:#AEB6C2 !important; }
+a { color:#3D5AFE; }
+a:hover { color:#FF2FA3; }
+:focus-visible { outline-color:#FF8A1E !important; }
+.menu-toggle { border-color:rgba(61,90,254,.65) !important;background:rgba(6,7,10,.94) !important;box-shadow:0 0 22px rgba(61,90,254,.16) !important; }
+.menu-toggle span,.menu-heading b { background:#3D5AFE !important;color:#3D5AFE !important;box-shadow:0 0 8px rgba(61,90,254,.36) !important; }
+.menu-close { border-color:rgba(174,182,194,.3) !important;background:#121522 !important;color:#FF2FA3 !important; }
+.menu-link { color:#F5F7FF !important; }
+.menu-link:hover { color:#FF2FA3 !important;border-color:rgba(255,47,163,.4) !important;background:rgba(255,47,163,.07) !important; }
+.menu-note { border-color:rgba(174,182,194,.2) !important;color:#AEB6C2 !important; }
+.site-menu { background:linear-gradient(155deg,#121522,#06070A) !important;border-color:rgba(61,90,254,.35) !important; }
+.box-front,.box-back {
+  color:#F5F7FF !important;
+  background:linear-gradient(150deg,#141722 0%,#0B0D13 100%) !important;
+  border:1px solid rgba(174,182,194,.26) !important;
+  box-shadow:inset 0 1px 0 rgba(245,247,255,.07),0 16px 36px rgba(0,0,0,.36) !important;
+}
+.box-front::before,.box-back::before { border-color:rgba(174,182,194,.12) !important; }
+.box-front h2,.box-back h2 { color:#F5F7FF !important;text-shadow:none !important; }
+.box-front p,.box-back p { color:#AEB6C2 !important; }
+.box-front p[style*="letter-spacing"] { color:#3D5AFE !important; }
+.game-box:nth-child(3n) .box-front p[style*="letter-spacing"] { color:#FF8A1E !important; }
+.game-box:nth-child(3n+2) .box-front p[style*="letter-spacing"] { color:#FF2FA3 !important; }
+.box-back a { color:#3D5AFE !important; }
+.play-btn,.primary,.primary-button {
+  color:#F5F7FF !important;
+  background:linear-gradient(110deg,#3D5AFE,#3049E8) !important;
+  border:1px solid rgba(174,182,194,.3) !important;
+  box-shadow:0 8px 24px rgba(61,90,254,.22) !important;
+}
+.play-btn:hover:not(:disabled),.primary:hover:not(:disabled) { background:linear-gradient(110deg,#FF2FA3,#D91F88) !important;box-shadow:0 8px 24px rgba(255,47,163,.2) !important; }
+#about-us,.auth-card,.signup-card,.player-card,.player-level-card,.game-progress-card,.about-hero,.universe-card,.mission-panel,.creator-panel,.community-panel,.game-shell,.stat,.help,.panel,.card,.auth-card {
+  color:#F5F7FF !important;
+  background-color:#0D0F16 !important;
+  border-color:rgba(174,182,194,.22) !important;
+  box-shadow:0 18px 50px rgba(0,0,0,.3) !important;
+}
+#about-us h2,.about-hero h1,.universe-card h3,.mission-panel h3,.creator-panel h3,.community-panel h3 { color:#F5F7FF !important;text-shadow:none !important; }
+.about-hero,.signup-card { background:radial-gradient(ellipse at 18% 12%,rgba(61,90,254,.18),transparent 44%),radial-gradient(ellipse at 86% 80%,rgba(255,47,163,.1),transparent 43%),linear-gradient(145deg,#121522,#06070A) !important; }
+.about-orbit { border-color:rgba(61,90,254,.38) !important;box-shadow:0 0 34px rgba(61,90,254,.1),inset 0 0 32px rgba(255,47,163,.07) !important; }
+.about-orbit::before { border-color:rgba(255,47,163,.42) !important; }
+.about-orbit::after { border-color:rgba(255,138,30,.48) !important; }
+footer { color:#AEB6C2 !important;background:linear-gradient(180deg,#0D0F16,#06070A) !important;border-color:rgba(174,182,194,.2) !important; }
+footer p:last-of-type { color:#F5F7FF !important; }
