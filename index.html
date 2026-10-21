@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REDCORE - website by ayushx</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="signup-popup.css">
 </head>
 <body>
     <audio id="bgMusic" loop preload="auto">
@@ -321,7 +322,21 @@
         document.addEventListener("keydown", (event) => { if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") setOpen(false); });
       })();
     </script>
+
+    <dialog class="signup-dialog" id="signup-dialog" aria-labelledby="signup-title" aria-describedby="signup-description">
+        <div class="signup-card">
+            <button class="signup-close" type="button" aria-label="Close sign-up popup" data-dismiss-signup>×</button>
+            <p class="signup-eyebrow">WELCOME TO REDCORE</p>
+            <h2 id="signup-title">Save your progress.<br>Keep your high scores.</h2>
+            <p id="signup-description">Create your REDCORE player ID with Google to save game activity and pick up where you left off.</p>
+            <button class="signup-google" id="signup-google" type="button"><span class="signup-google-mark" aria-hidden="true">G</span><span>Sign up or log in with Google</span></button>
+            <a class="signup-login" href="login.html">I already have an account</a>
+            <button class="signup-later" type="button" data-dismiss-signup>Maybe later</button>
+            <p class="signup-status" id="signup-status" role="status" aria-live="polite"></p>
+        </div>
+    </dialog>
     <script src="script.js"></script>
+    <script type="module" src="signup-popup.js"></script>
     <script type="module" src="account-ui.js"></script>
     <script>linkvertise(1459362, {whitelist: ["https://ayush-ji0045.github.io/REDCORE/"], blacklist: []});</script>
 </body>
