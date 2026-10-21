@@ -91,3 +91,16 @@ a:hover { color:#FF2FA3; }
 .about-orbit::after { border-color:rgba(255,138,30,.48) !important; }
 footer { color:#AEB6C2 !important;background:linear-gradient(180deg,#0D0F16,#06070A) !important;border-color:rgba(174,182,194,.2) !important; }
 footer p:last-of-type { color:#F5F7FF !important; }
+
+/* Auth and progression accents */
+.auth-card,.signup-dialog,.levelup-dialog { border-color:rgba(61,90,254,.52) !important; }
+.auth-mark,.signup-eyebrow,.levelup-kicker,.levelup-number,.reactor-label { color:#3D5AFE !important; }
+.back-link,.signup-login,.game-progress-card a,.back-to-arcade { color:#3D5AFE !important; }
+.signup-card::before { background:linear-gradient(90deg,transparent,#3D5AFE,#FF2FA3,#FF8A1E,transparent) !important; }
+.signup-close { border-color:rgba(174,182,194,.3) !important;background:#121522 !important;color:#FF2FA3 !important; }
+.levelup-dialog { color:#F5F7FF !important;background:radial-gradient(circle at 50% 0,rgba(61,90,254,.22),#0D0F16 68%) !important; }
+.levelup-emblem { border-color:rgba(255,47,163,.65) !important;color:#F5F7FF !important;background:radial-gradient(circle,rgba(61,90,254,.32),rgba(255,47,163,.1) 70%) !important;box-shadow:0 0 30px rgba(61,90,254,.25) !important; }
+.levelup-content h2 { color:#F5F7FF !important;text-shadow:0 0 24px rgba(61,90,254,.35) !important; }
+.levelup-content button { color:#F5F7FF !important;background:#3D5AFE !important;box-shadow:0 0 22px rgba(61,90,254,.28) !important; }
+.levelup-content button:hover { background:#FF2FA3 !important; }
+.level-track span { background:linear-gradient(90deg,var(--core-color),#FF2FA3,#3D5AFE) !important; }
