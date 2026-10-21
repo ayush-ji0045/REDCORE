@@ -21,11 +21,20 @@
   </section>
   <section class="dashboard-section level-section" aria-labelledby="level-heading">
     <div class="player-level-card">
-      <div class="level-topline"><small>YOUR PLAYER LEVEL</small><span id="level-number">LEVEL 1</span></div>
-      <div class="level-heading-row"><div><h2 id="level-heading">Rookie</h2><p id="total-playtime">0 min active playtime</p></div></div>
-      <div class="level-track" id="level-progress-track" role="progressbar" aria-label="Progress to next player level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="level-progress"></span></div>
-      <div class="level-footer"><span id="level-progress-copy">0% to next level</span><span id="next-level-note">1 hour to Explorer</span></div>
-      <p class="level-hint">Playtime pauses when you switch tabs or are idle. Flappy Yadav's embedded game counts while its page is visible.</p>
+      <div class="level-topline"><small>CORE REACTOR</small><span id="level-number">LEVEL 1</span></div>
+      <div class="level-layout">
+        <div class="core-reactor" id="core-reactor" role="img" aria-label="Core Reactor, Level 1">
+          <span class="reactor-orbit reactor-orbit-one" aria-hidden="true"></span>
+          <span class="reactor-orbit reactor-orbit-two" aria-hidden="true"></span>
+          <div class="reactor-core"><small>REDCORE</small><strong id="reactor-level">01</strong><span id="reactor-title">ROOKIE</span></div>
+        </div>
+        <div class="level-info">
+          <div class="level-heading-row"><div><small class="reactor-label">PLAYER RANK</small><h2 id="level-heading">Rookie</h2><p id="total-playtime">0 min active playtime</p></div></div>
+          <div class="level-track" id="level-progress-track" role="progressbar" aria-label="Progress to next player level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="level-progress"></span></div>
+          <div class="level-footer"><span id="level-progress-copy">0% to next level</span><span id="next-level-note">1 hour to Explorer</span></div>
+        </div>
+      </div>
+      <p class="level-hint">Play to charge the reactor. Your active playtime pauses when you switch tabs or are idle.</p>
     </div>
   </section>
   <section class="dashboard-section">
@@ -34,6 +43,16 @@
   </section>
   <a class="back-to-arcade" href="index.html">← Back to REDCORE Arcade</a>
 </main>
+<dialog class="levelup-dialog" id="levelup-dialog" aria-labelledby="levelup-title">
+  <div class="levelup-content">
+    <span class="levelup-kicker">REACTOR OVERCHARGE</span>
+    <div class="levelup-emblem" aria-hidden="true">↑</div>
+    <h2 id="levelup-title">LEVEL UP!</h2>
+    <p>You reached <strong id="levelup-rank">Explorer</strong></p>
+    <span class="levelup-number" id="levelup-number">LEVEL 2</span>
+    <button type="button" id="levelup-dismiss">LET'S PLAY</button>
+  </div>
+</dialog>
 <script type="module" src="dashboard.js"></script>
 <script type="module" src="account-ui.js"></script>
 </body>
