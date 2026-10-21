@@ -19,6 +19,15 @@
     <img id="player-photo" alt="" hidden>
     <div><small>PLAYER ID</small><h2 id="player-name">Loading your account…</h2><p id="player-email"></p></div>
   </section>
+  <section class="dashboard-section level-section" aria-labelledby="level-heading">
+    <div class="player-level-card">
+      <div class="level-topline"><small>YOUR PLAYER LEVEL</small><span id="level-number">LEVEL 1</span></div>
+      <div class="level-heading-row"><div><h2 id="level-heading">Rookie</h2><p id="total-playtime">0 min active playtime</p></div></div>
+      <div class="level-track" id="level-progress-track" role="progressbar" aria-label="Progress to next player level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="level-progress"></span></div>
+      <div class="level-footer"><span id="level-progress-copy">0% to next level</span><span id="next-level-note">1 hour to Explorer</span></div>
+      <p class="level-hint">Playtime counts while the game page is visible and active. It pauses when you switch tabs or are idle.</p>
+    </div>
+  </section>
   <section class="dashboard-section">
     <div class="section-title"><div><small>YOUR PLAY HISTORY</small><h2>Most played by you</h2></div><span id="game-count">0 games</span></div>
     <div id="game-list" class="game-list" aria-live="polite"><p class="empty-state">Loading saved activity…</p></div>
