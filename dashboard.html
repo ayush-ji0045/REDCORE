@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070a12">
+<title>Player Dashboard | REDCORE</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<header class="dashboard-header">
+  <a class="dashboard-brand" href="index.html">REDCORE <span>PLAYER ID</span></a>
+  <h1>Your arcade, at a glance.</h1>
+  <p>Pick up where you left off and see which games you play most.</p>
+</header>
+<main class="dashboard-main">
+  <section class="player-card" id="player-card">
+    <img id="player-photo" alt="" hidden>
+    <div><small>PLAYER ID</small><h2 id="player-name">Loading your account…</h2><p id="player-email"></p></div>
+  </section>
+  <section class="dashboard-section">
+    <div class="section-title"><div><small>YOUR PLAY HISTORY</small><h2>Most played by you</h2></div><span id="game-count">0 games</span></div>
+    <div id="game-list" class="game-list" aria-live="polite"><p class="empty-state">Loading saved activity…</p></div>
+  </section>
+  <a class="back-to-arcade" href="index.html">← Back to REDCORE Arcade</a>
+</main>
+<script type="module" src="dashboard.js"></script>
+<script type="module" src="account-ui.js"></script>
+</body>
+</html>
