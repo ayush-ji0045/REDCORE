@@ -8,22 +8,26 @@
 <link rel="stylesheet" href="style.css">
 <style>
 body{min-height:100vh;display:grid;place-items:center;padding:24px}
-.auth-card{width:min(460px,100%);padding:clamp(24px,6vw,42px);border:1px solid #39f5ff40;border-radius:24px;background:linear-gradient(145deg,#121a2b,#0a0e19);box-shadow:0 28px 80px #0008;text-align:center}
+main.auth-card{display:block;width:min(460px,calc(100vw - 32px));max-width:100%;margin-inline:auto;padding:clamp(24px,6vw,42px);border:1px solid #39f5ff40;border-radius:24px;background:linear-gradient(145deg,#121a2b,#0a0e19);box-shadow:0 28px 80px #0008;text-align:center}
 .auth-mark{color:#39f5ff;font-size:.78rem;font-weight:900;letter-spacing:.2em}
-.auth-card h1{margin:14px 0 10px;font-size:clamp(2rem,8vw,3rem)}
+.auth-card h1{margin:14px 0 10px;font-size:clamp(2rem,8vw,3rem);line-height:1.12}
 .auth-card p{color:#a7b4ca;line-height:1.65}
+.auth-card .auth-description{max-width:34rem;margin:0 auto}
 .google-button{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;margin-top:24px;padding:15px 18px;border:1px solid #55708c;border-radius:12px;background:#f8fafc;color:#18202c;font-size:1rem;font-weight:800;cursor:pointer}
-.google-button:hover{background:white;transform:translateY(-1px)}
-.google-g{font:bold 1.3rem Arial;color:#4285f4}
-.auth-message{min-height:1.6em;margin-top:14px!important;color:#ffc0d9!important;font-size:.92rem}
+.google-button:hover:not(:disabled){background:white;transform:translateY(-1px)}
+.google-button:disabled{opacity:.65;cursor:not-allowed}
+.google-g{flex:0 0 auto;font:bold 1.3rem Arial;color:#4285f4}
+.auth-message{min-height:1.6em;margin:14px 0 0!important;color:#ffc0d9!important;font-size:.92rem;overflow-wrap:anywhere}
+.auth-message a{display:inline-block;margin-top:4px;color:#7df7ff}
 .back-link{display:inline-block;margin-top:14px;color:#39f5ff;text-decoration:none}
+@media(max-width:480px){body{padding:16px}.auth-card h1{font-size:2.25rem}}
 </style>
 </head>
 <body>
 <main class="auth-card">
   <div class="auth-mark">REDCORE ARCADE</div>
   <h1>Your games,<br>your progress.</h1>
-  <p>Use Google to create your REDCORE ID or sign in. Your personal game activity and progress will follow your account.</p>
+  <p class="auth-description">Use Google to create your REDCORE ID or sign in. Your personal game activity and progress will follow your account.</p>
   <button class="google-button" id="google-sign-in" type="button"><span class="google-g" aria-hidden="true">G</span><span>Continue with Google</span></button>
   <p class="auth-message" id="auth-message" role="status" aria-live="polite"></p>
   <a class="back-link" href="index.html">← Back to the arcade</a>
@@ -35,7 +39,11 @@ const message = document.querySelector("#auth-message");
 const show = text => { message.textContent = text; };
 if (!firebaseReady) {
   button.disabled = true;
-  show("Firebase needs to be connected before sign-in can work. See FIREBASE_SETUP.md.");
+  show("Google sign-in needs Firebase setup before it can work. ");
+  const setupLink = document.createElement("a");
+  setupLink.href = "FIREBASE_SETUP.md";
+  setupLink.textContent = "Open setup guide";
+  message.append(setupLink);
 } else {
   try { await finishGoogleRedirect(); } catch (error) { show(friendlyAuthError(error)); }
   onAuthStateChanged(auth, user => { if (user) location.replace("dashboard.html"); });
