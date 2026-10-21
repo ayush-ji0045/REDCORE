@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/games/{gameId} {
+      function ownsPlayerData() {
+        return request.auth != null && request.auth.uid == userId;
+      }
+      function validGameRecord() {
+        return request.resource.data.keys().hasOnly([
+          "gameId", "title", "playCount", "bestScore", "lastScore", "lastPlayed", "updatedAt"
+        ])
+        && request.resource.data.gameId == gameId
+        && request.resource.data.playCount is number
+        && request.resource.data.playCount >= 0
+        && request.resource.data.bestScore is number
+        && request.resource.data.bestScore >= 0;
+      }
+      allow read, delete: if ownsPlayerData();
+      allow create, update: if ownsPlayerData() && validGameRecord();
+    }
+  }
+}
