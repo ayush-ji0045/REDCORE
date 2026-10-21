@@ -162,7 +162,7 @@ onAuthStateChanged(auth,async current=>{
  const params=new URLSearchParams(location.search);if(params.get("room")&&!roomId){ui.code.value=params.get("room");await enterRoom(ui.code.value);}
  else notice("Signed in. Create a room or enter a friend's code.","success");
 });
-if(firebaseReady&&app){db=getDatabase(app);setupDrawing();notice("Firebase ready. Sign in to play.","success");}
+if(firebaseReady&&app){db=getDatabase(app,"https://redcore-99-default-rtdb.firebaseio.com");setupDrawing();notice("Firebase ready. Sign in to play.","success");}
 else{setSignedOut();notice("Firebase isn't configured yet. Configure the project before playing.","error");}
 function showResults(){
  ui.results.hidden=false;ui.room.hidden=true;const sorted=members().sort((a,b)=>(b.score||0)-(a.score||0));ui.scores.innerHTML="";sorted.forEach(p=>{const li=document.createElement("li");li.textContent=(p.displayName||"Player")+" — "+Number(p.score||0)+" points";ui.scores.append(li);});
