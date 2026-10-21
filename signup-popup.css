@@ -1,0 +1,18 @@
+.signup-dialog{width:min(500px,calc(100% - 28px));max-width:none;padding:0;border:1px solid #39f5ff70;border-radius:24px;background:transparent;color:#edf5ff;box-shadow:0 30px 100px #000b}
+.signup-dialog::backdrop{background:rgba(2,5,13,.78);backdrop-filter:blur(8px)}
+.signup-card{position:relative;overflow:hidden;padding:clamp(25px,6vw,42px);border-radius:23px;background:radial-gradient(ellipse at 90% 0,#162c47 0,transparent 55%),linear-gradient(145deg,#111a2a,#080d17);text-align:center}
+.signup-card::before{content:"";position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#39f5ff,#ff4fd8,transparent)}
+.signup-close{position:absolute;top:12px;right:14px;width:38px;height:38px;border:1px solid #71829b66;border-radius:50%;background:#111a2a;color:#edf5ff;font-size:1.5rem;cursor:pointer}
+.signup-eyebrow{margin:4px 0 12px;color:#39f5ff;font-size:.72rem;font-weight:900;letter-spacing:.2em}
+.signup-card h2{margin:0 auto 12px;max-width:390px;font-size:clamp(1.8rem,7vw,2.55rem);line-height:1.08}
+.signup-card>p{margin:0 auto;color:#a7b4ca;line-height:1.65;max-width:390px}
+.signup-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:24px 0 13px;padding:14px 18px;border:0;border-radius:12px;background:#f8fafc;color:#101827;font:800 1rem Inter,"Segoe UI",Arial,sans-serif;cursor:pointer}
+.signup-google:hover:not(:disabled){background:#fff;transform:translateY(-1px)}
+.signup-google:disabled{cursor:not-allowed;opacity:.65}
+.signup-google-mark{font:bold 1.25rem Arial;color:#4285f4}
+.signup-login{display:inline-block;margin:8px;color:#7df7ff;font-weight:750;text-decoration:none}
+.signup-login:hover{text-decoration:underline}
+.signup-later{display:block;margin:12px auto 0;padding:8px 14px;border:0;background:transparent;color:#9aa9c0;font:600 .9rem Inter,"Segoe UI",Arial,sans-serif;cursor:pointer}
+.signup-status{min-height:1.5em;margin:10px 0 0!important;color:#ffd0df!important;font-size:.85rem;line-height:1.4!important}
+@media(max-width:600px){.signup-card{padding:34px 22px 25px}.signup-dialog{border-radius:20px}.signup-card h2{font-size:1.9rem}}
+@media(prefers-reduced-motion:reduce){.signup-google:hover:not(:disabled){transform:none}}
