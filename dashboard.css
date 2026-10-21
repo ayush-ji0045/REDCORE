@@ -1,0 +1,24 @@
+.dashboard-header{padding:70px 20px 38px}
+.dashboard-header h1{font-size:clamp(2rem,6vw,3.5rem)}
+.dashboard-header p{margin:12px auto 0}
+.dashboard-brand{display:inline-block;margin-bottom:20px;color:#39f5ff;text-decoration:none;font-size:.75rem;letter-spacing:.18em;font-weight:900}
+.dashboard-brand span{color:#edf5ff}
+.dashboard-main{display:block;max-width:1000px;margin:0 auto;padding:28px 20px 60px}
+.player-card{display:flex;align-items:center;gap:18px;padding:20px 24px;border:1px solid #39f5ff38;border-radius:18px;background:#101725d9;box-shadow:0 14px 36px #0004}
+.player-card img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid #39f5ff}
+.player-card small,.section-title small{color:#39f5ff;font-weight:900;letter-spacing:.15em;font-size:.68rem}
+.player-card h2{margin:5px 0;font-size:1.35rem}
+.player-card p{margin:0;color:#a7b4ca}
+.dashboard-section{margin-top:34px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:16px}
+.section-title h2{margin:6px 0 0;font-size:clamp(1.5rem,4vw,2rem)}
+.section-title>span{color:#a7b4ca;font-size:.88rem}
+.game-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px}
+.game-progress-card{padding:20px;border:1px solid #293750;border-radius:16px;background:linear-gradient(145deg,#141c2b,#0b101b)}
+.game-progress-card h3{margin:0 0 14px;font-size:1.1rem}
+.progress-stats{display:flex;gap:18px;flex-wrap:wrap;color:#a7b4ca;font-size:.88rem}
+.progress-stats b{display:block;margin-top:4px;color:#edf5ff;font-size:1.2rem}
+.game-progress-card a{display:inline-block;margin-top:17px;color:#39f5ff;text-decoration:none;font-weight:800}
+.empty-state,.status-message{grid-column:1/-1;padding:24px;border:1px dashed #344561;border-radius:14px;color:#a7b4ca;text-align:center}
+.back-to-arcade{display:inline-block;margin-top:28px;color:#39f5ff;text-decoration:none;font-weight:800}
+@media(max-width:600px){.dashboard-header{padding-top:72px}.dashboard-main{padding:20px 14px 48px}.player-card{padding:16px}.player-card img{width:52px;height:52px}}
