@@ -1,6 +1,6 @@
 import { auth, firebaseReady, onAuthStateChanged } from "./auth.js";
 import { db } from "./firebase.js";
-import { collection, doc, getDoc, increment, runTransaction, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { collection, doc, getDoc, increment, runTransaction, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 const games = {
   "game": "Flappy Yadav",
