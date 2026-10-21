@@ -5,7 +5,7 @@ This adds Draw & Guess as game 7 without replacing the first six cards or their 
 ## Enable Realtime Database
 
 1. Open the Firebase console for project `redcore-99`.
-2. Go to **Build → Realtime Database** and create a database.
+2. Go to **Build → Realtime Database** and create a database. The existing database URL is configured directly in `draw-guess.js`; you do not need to change the existing `firebase-config.js`.
 3. Open the **Rules** tab and review/publish the starter rules from `database.rules.json`. Rules in a JSON file are not automatically published by GitHub.
 4. Ensure Google is enabled under **Authentication → Sign-in method** and your deployed hostname is listed under **Authorized domains**.
 5. Serve the site over HTTPS or localhost. ES modules and Google sign-in will not work reliably when opening the HTML file directly with `file://`.
