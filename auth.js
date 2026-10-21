@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 import { auth, firebaseReady } from "./firebase.js";
 
 export { auth, firebaseReady, onAuthStateChanged, signOut };
@@ -9,7 +9,7 @@ export async function signInWithGoogle() {
   try {
     return await signInWithPopup(auth, provider);
   } catch (error) {
-    if (["auth/popup-blocked", "auth/popup-closed-by-user", "auth/operation-not-supported-in-this-environment"].includes(error.code)) {
+    if (["auth/popup-blocked", "auth/operation-not-supported-in-this-environment"].includes(error.code)) {
       await signInWithRedirect(auth, provider);
       return null;
     }
