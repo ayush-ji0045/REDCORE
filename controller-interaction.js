@@ -8,7 +8,7 @@
   const REST_Y = -22;
   let rx = REST_X, ry = REST_Y, vx = 0, vy = 0;
   let dragging = false, px = 0, py = 0, lastX = 0, lastY = 0;
-  let frame = 0, previousTime = 0, spinSpeed = 0.28;
+  let frame = 0, previousTime = 0, spinSpeed = 0.28, spinXSpeed = 0.12;
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
   const angleDelta = (target, current) => ((target - current + 180) % 360 + 360) % 360 - 180;
   const bounds = () => ({
@@ -50,14 +50,11 @@
       const damping = Math.pow(0.88, dt);
       // Keep a slow continuous Y-axis spin; scrolling boosts its speed.
       spinSpeed += (0.28 - spinSpeed) * (1 - Math.pow(0.985, dt));
-      vy += angleDelta(REST_X, rx) * spring;
+      spinXSpeed += (0.12 - spinXSpeed) * (1 - Math.pow(0.99, dt));
       vx *= damping;
       vy *= damping;
       ry += (spinSpeed + vx * 0.12) * dt;
-      rx += vy * dt;
-      if (Math.abs(vy) < 0.025 && Math.abs(angleDelta(REST_X, rx)) < 0.35) {
-        rx = REST_X; vy = 0;
-      }
+      rx += (spinXSpeed + vy * 0.12) * dt;
       paint();
       frame = requestAnimationFrame(animate);
     } else {
@@ -129,6 +126,7 @@
     const delta = currentY - lastScrollY;
     lastScrollY = currentY;
     spinSpeed = clamp(spinSpeed + delta * 0.018, -7, 7);
+    spinXSpeed = clamp(spinXSpeed + delta * 0.009, -5, 5);
     if (!dragging && !reducedMotion && !frame) frame = requestAnimationFrame(animate);
   }, { passive: true });
   addEventListener('resize', resetPosition);
