@@ -210,7 +210,7 @@ h1 span{background:linear-gradient(95deg,#42f6ff,#bd8aff 52%,#ff5dd6);-webkit-ba
     </div>
     <div class="start-row">
       <div class="note">Original music is synthesized live in your browser. Headphones recommended. Best score is saved on this device.</div>
-      <button class="primary" id="startBtn" type="button">▶ START RUN</button>
+      <button class="primary" id="startBtn" type="button">START RUN</button>
     </div>
   </section>
 
@@ -413,7 +413,7 @@ function finishGame(){
 }
 function togglePause(){
  if(!playing)return;
- if(!paused){paused=true;pauseAt=performance.now();cancelAnimationFrame(raf);if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();$('pauseBtn').textContent='▶ Resume';showFeedback('PAUSED','#38f6ff')}
+ if(!paused){paused=true;pauseAt=performance.now();cancelAnimationFrame(raf);if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();$('pauseBtn').textContent='Resume';showFeedback('PAUSED','#38f6ff')}
  else{elapsedBeforePause=pauseAt-gameStart+elapsedBeforePause;gameStart=performance.now();paused=false;if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();audioStart=audioCtx.currentTime+.12-runElapsed()/1000;$('pauseBtn').textContent='Ⅱ Pause';raf=requestAnimationFrame(frame)}
 }
 function backToSongs(){playing=false;paused=false;cancelAnimationFrame(raf);clearNotes();$('game').classList.remove('active');$('lobby').classList.remove('hidden');$('endScreen').hidden=true}
@@ -434,3 +434,4 @@ $('pauseBtn').addEventListener('click',togglePause);
     <script type="module" src="game-tracker.js"></script>
 </body>
 </html>
+
