@@ -18,11 +18,19 @@
 
   function paint() {
     const limit = bounds();
+    // The uploaded image is a multi-view sheet. Cycle between front/back
+    // crops as the controller turns, keeping the sheet itself hidden.
+    const yaw = ((ry % 360) + 360) % 360;
+    const side = Math.abs(Math.sin(ry * Math.PI / 180));
+    controller.style.setProperty('--controller-face', yaw > 90 && yaw < 270 ? 'back' : 'front');
+    controller.style.setProperty('--controller-turn', side.toFixed(3));
     px = clamp(px, 0, limit.x);
     py = clamp(py, 0, limit.y);
     controller.style.left = px + 'px';
     controller.style.top = py + 'px';
     // Keep angles unwrapped so repeated drags can complete multiple full turns.
+    // Simulated 3D turn: rotate around both axes while the sprite crop
+    // switches between the sheet's front and rear views.
     controller.style.transform =
       'translate3d(0,0,0) rotateX(' + rx + 'deg) rotateY(' + ry +
       'deg) rotateZ(' + (Math.sin(ry * Math.PI / 180) * 4) + 'deg)';
