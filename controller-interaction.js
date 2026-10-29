@@ -8,7 +8,7 @@
   const REST_Y = -22;
   let rx = REST_X, ry = REST_Y, vx = 0, vy = 0;
   let dragging = false, px = 0, py = 0, lastX = 0, lastY = 0;
-  let frame = 0, previousTime = 0;
+  let frame = 0, previousTime = 0, spinSpeed = 0.28;
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
   const angleDelta = (target, current) => ((target - current + 180) % 360 + 360) % 360 - 180;
   const bounds = () => ({
@@ -40,16 +40,15 @@
       // resting pose, with a little overshoot for a physical, springy feel.
       const spring = 0.018 * dt;
       const damping = Math.pow(0.88, dt);
-      vx += angleDelta(REST_Y, ry) * spring;
+      // Keep a slow continuous Y-axis spin; scrolling boosts its speed.
+      spinSpeed += (0.28 - spinSpeed) * (1 - Math.pow(0.985, dt));
       vy += angleDelta(REST_X, rx) * spring;
       vx *= damping;
       vy *= damping;
-      ry += vx * dt;
+      ry += (spinSpeed + vx * 0.12) * dt;
       rx += vy * dt;
-      if (Math.abs(vx) < 0.025 && Math.abs(vy) < 0.025 &&
-          Math.abs(angleDelta(REST_Y, ry)) < 0.35 && Math.abs(angleDelta(REST_X, rx)) < 0.35) {
-        rx = REST_X; ry = REST_Y; vx = vy = 0; previousTime = 0; paint();
-        return;
+      if (Math.abs(vy) < 0.025 && Math.abs(angleDelta(REST_X, rx)) < 0.35) {
+        rx = REST_X; vy = 0;
       }
       paint();
       frame = requestAnimationFrame(animate);
@@ -94,7 +93,7 @@
     controller.classList.remove('is-dragging');
     previousTime = 0;
     if (!reducedMotion) frame = requestAnimationFrame(animate);
-    else { rx = REST_X; ry = REST_Y; paint(); }
+    else { rx = REST_X; paint(); }
   }
 
   function resetPosition() {
@@ -116,6 +115,14 @@
   controller.addEventListener('pointerup', end);
   controller.addEventListener('pointercancel', end);
   controller.addEventListener('lostpointercapture', end);
+  let lastScrollY = window.scrollY;
+  addEventListener('scroll', () => {
+    const currentY = window.scrollY;
+    const delta = currentY - lastScrollY;
+    lastScrollY = currentY;
+    spinSpeed = clamp(spinSpeed + delta * 0.018, -7, 7);
+    if (!dragging && !reducedMotion && !frame) frame = requestAnimationFrame(animate);
+  }, { passive: true });
   addEventListener('resize', resetPosition);
   resetPosition();
 })();
