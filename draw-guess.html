@@ -15,7 +15,7 @@ header{text-align:center;padding:clamp(16px,3vw,28px) 8px 10px}header h1{margin:
 </head>
 <body><main class="wrap">
 <div class="top"><a href="index.html">← REDCORE Arcade</a><span class="muted">MULTIPLAYER PARTY · GAME 007</span></div>
-<header><h1>Draw &amp; Guess 🎨</h1><p class="muted">Create a room for 2–8 players. One player draws while everyone else guesses.</p></header>
+<header><h1>Draw &amp; Guess</h1><p class="muted">Create a room for 2–8 players. One player draws while everyone else guesses.</p></header>
 <section class="panel" id="lobby"><h2>Join the party</h2><p class="muted" id="identity">Checking your REDCORE sign-in…</p>
 <div class="row"><button id="google">Sign in with Google</button></div>
 <hr style="border-color:#303452;margin:18px 0">
@@ -56,3 +56,4 @@ async function sendGuess(){const text=$('guess').value.trim();if(!text||!roomId|
 $('send').onclick=sendGuess;$('guess').addEventListener('keydown',e=>{if(e.key==='Enter')sendGuess()});$('copy').onclick=async()=>{const url=location.origin+location.pathname+'?room='+roomId;try{await navigator.clipboard.writeText(url);gs('Invite link copied!')}catch{gs('Share this room code: '+roomId)}};
 resetBoard();
 </script></body></html>
+
