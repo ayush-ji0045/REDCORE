@@ -1,0 +1,2 @@
+(() => { const controller = document.querySelector('.controller'); if (!controller || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const update = () => { const p = Math.min(scrollY / Math.max(innerHeight, 1), 1); controller.style.setProperty('--roll', `${-18 + p * 118}deg`); controller.style.setProperty('--lift', `${p * -22}px`); controller.style.setProperty('--drift', `${p * 30}px`); }; addEventListener('scroll', update, { passive: true }); update(); })();
+
