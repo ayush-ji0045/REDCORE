@@ -42,7 +42,7 @@ const tint={Original:"#8b9ca8",Tech:"#68a9cb",Animals:"#8bbd86",Buildings:"#c59b
 const pairKey=(a,b)=>[a,b].sort((x,y)=>x.localeCompare(y)).join("+");
 const RECIPE_MAP=Object.create(null), BY_ELEMENT=Object.create(null), PARTNERS=Object.create(null);
 for(const r of RECIPES){const k=pairKey(r.a,r.b);if(RECIPE_MAP[k]&&RECIPE_MAP[k].makes!==r.makes)throw Error("Recipe pair conflict: "+k);RECIPE_MAP[k]=r;(PARTNERS[r.a]??=new Set()).add(r.b);(PARTNERS[r.b]??=new Set()).add(r.a);}
-for(const [element,entry] of Object.entries(ELEMENT_RECIPES)){BY_ELEMENT[element]=entry.recipes.map(p=>({a:p.a,b:p.b,makes:element,cat:entry.category}));}
+for(const recipe of RECIPES){(BY_ELEMENT[recipe.makes]??=[]).push(recipe);}
 const RECIPES_BY_ELEMENT=BY_ELEMENT;
 /* STATE */
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -122,7 +122,7 @@ $("tutorialDone").onclick=()=>{state.tutorial=true;save();closeModal($("tutorial
 $("tutorialClose").onclick=()=>{state.tutorial=true;save()};
 window.addEventListener("resize",()=>{for(const o of state.canvas){o.x=clamp(o.x,35,canvas.clientWidth-35);o.y=clamp(o.y,40,canvas.clientHeight-35)}renderCanvas()});
 /* STARTUP + DATA VALIDATION */
-function validateData(){if(ELEMENTS.length!==354||STARTERS.length!==4)throw Error("Expected 354 elements including four starters.");if(RECIPES.length!==1050||Object.keys(ELEMENT_RECIPES).length!==350)throw Error("Expected exactly 1,050 recipes across 350 By element entries.");for(const n of ELEMENTS)if(!EMOJI[n])throw Error("Missing emoji for "+n);for(const n of ELEMENTS.filter(x=>!STARTERS.includes(x)))if((BY_ELEMENT[n]||[]).length!==3)throw Error("Element does not have exactly three recipes: "+n);for(const r of RECIPES)if(!BY_ELEMENT[r.makes]?.some(p=>pairKey(p.a,p.b)===pairKey(r.a,r.b)))throw Error("Flat list and By element sheets disagree.");const reached=new Set(STARTERS);let changed=true;while(changed){changed=false;for(const r of RECIPES)if(reached.has(r.a)&&reached.has(r.b)&&!reached.has(r.makes)){reached.add(r.makes);changed=true}}if(reached.size!==354)throw Error("Some elements are unreachable from starters.");}
+function validateData(){if(ELEMENTS.length!==354||STARTERS.length!==4)throw Error("Expected 354 elements including four starters.");if(RECIPES.length!==1050||Object.keys(BY_ELEMENT).length!==350)throw Error("Expected exactly 1,050 recipes across 350 By element entries.");for(const n of ELEMENTS)if(!EMOJI[n])throw Error("Missing emoji for "+n);for(const n of ELEMENTS.filter(x=>!STARTERS.includes(x)))if((BY_ELEMENT[n]||[]).length!==3)throw Error("Element does not have exactly three recipes: "+n);for(const r of RECIPES)if(!BY_ELEMENT[r.makes]?.some(p=>pairKey(p.a,p.b)===pairKey(r.a,r.b)))throw Error("Flat list and By element sheets disagree.");const reached=new Set(STARTERS);let changed=true;while(changed){changed=false;for(const r of RECIPES)if(reached.has(r.a)&&reached.has(r.b)&&!reached.has(r.makes)){reached.add(r.makes);changed=true}}if(reached.size!==354)throw Error("Some elements are unreachable from starters.");}
 try{validateData()}catch(e){toast("Data check failed: "+e.message)}
 load();state.craftableMode=false;document.documentElement.dataset.theme=state.theme==="auto"?"":state.theme;renderAll();startLoop();/* Tutorial is opened only from Help, never as a blocking startup overlay. */
 </script></body></html>
