@@ -64,14 +64,13 @@ function discover(el,recipe){if(!state.owned.has(el)){state.owned.add(el);state.
 function renderCanvas(){canvas.innerHTML="";for(const o of state.canvas){const el=document.createElement("div");el.className="item"+(drag?.id===o.id?" dragging":"");el.dataset.id=o.id;el.style.left=o.x+"px";el.style.top=o.y+"px";el.style.transform=`translate(-50%,-50%) scale(${o.scale||1})`;el.style.setProperty("--tint",tint[CATEGORY[o.el]]||"#aaa");el.setAttribute("role","button");el.setAttribute("tabindex","0");el.setAttribute("aria-label",o.el+" on canvas. Drag to combine.");el.innerHTML=`<span class="emoji">${EMOJI[o.el]||"✨"}</span><span class="name"></span>${o.badge?'<span class="newtag">NEW</span>':""}`;el.querySelector(".name").textContent=o.el;canvas.appendChild(el)}$("emptyHint").style.display=state.canvas.length?"none":"block"}
 function renderPanel(){const craft=craftable(),box=$("elements"),q=$("search").value.trim().toLowerCase();$("foundCount").textContent=state.owned.size+" / 354";$("craftToggle").checked=state.craftableMode;$("panelTitle").textContent=state.craftableMode?"Craftable elements":"Discovered elements";$("search").style.display=state.craftableMode?"none":"";$("sort").value=state.sort;$("craftCount").textContent=craft.length+" new items craftable now";box.innerHTML="";
 if(state.craftableMode){if(!craft.length){box.innerHTML='<div class="empty">No new combinations are ready yet. Start with these four elements:</div>';for(const name of STARTERS){const b=document.createElement("button");b.className="chip";b.style.setProperty("--tint",tint[CATEGORY[name]]||"#aaa");b.innerHTML=`<span class="emoji">${EMOJI[name]}</span><span class="name"></span>`;b.querySelector(".name").textContent=name;b.onclick=()=>pushCanvas(name);box.appendChild(b)}return}box.innerHTML='<div class="section-title">Craftable</div>';for(const name of sortNames(craft)){const b=document.createElement("button");b.className="chip locked";b.style.setProperty("--tint",tint[CATEGORY[name]]||"#aaa");b.innerHTML='<span>🔒</span><span class="name"></span>';b.querySelector(".name").textContent="??? ("+CATEGORY[name]+")";b.onclick=()=>toast("You can make something new in "+CATEGORY[name]+". Try combining your elements.");box.appendChild(b)}return}
-let list=[...state.owned].filter(x=>x.toLowerCase().includes(q));if(state.sort==="new")list.sort((a,b)=>state.order.indexOf(b)-state.order.indexOf(a));else list=sortNames(list);for(const name of list){const b=document.createElement("button");b.className="chip";b.style.setProperty("--tint",tint[CATEGORY[name]]||"#aaa");b.draggable=false;b.innerHTML=`<span class="emoji">${EMOJI[name]}</span><span class="name"></span><span class="route-count"></span>`;b.querySelector(".name").textContent=name;b.querySelector(".route-count").textContent=routesFound(name)+"/3";b.querySelector(".route-count").style.cssText="font-size:10px;color:var(--muted);font-weight:600";b.addEventListener("click",()=>{if(suppressChipClick){suppressChipClick=false;return}pushCanvas(name)});box.appendChild(b)}}
+let list=[...state.owned].filter(x=>x.toLowerCase().includes(q));if(state.sort==="new")list.sort((a,b)=>state.order.indexOf(b)-state.order.indexOf(a));else list=sortNames(list);for(const name of list){const b=document.createElement("button");b.className="chip";b.style.setProperty("--tint",tint[CATEGORY[name]]||"#aaa");b.draggable=false;b.innerHTML=`<span class="emoji">${EMOJI[name]}</span><span class="name"></span><span class="route-count"></span>`;b.querySelector(".name").textContent=name;b.querySelector(".route-count").textContent=routesFound(name)+"/3";b.querySelector(".route-count").style.cssText="font-size:10px;color:var(--muted);font-weight:600";box.appendChild(b)}}
 function sortNames(arr){return [...arr].sort((a,b)=>state.sort==="cat"?(CATEGORY[a]||"").localeCompare(CATEGORY[b]||"")||a.localeCompare(b):a.localeCompare(b))}
 function renderAll(){renderPanel();renderCanvas();$("undoBtn").disabled=!undoStack.length||combining;if(state.owned.size===354)toast("🎉 All 354 elements discovered!")}
 function canvasPoint(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
 function nearestItem(x,y,except){let best=null,dist=Infinity;for(const o of state.canvas){if(o.id===except)continue;const d=Math.hypot(o.x-x,o.y-y);if(d<105&&d<dist){best=o;dist=d}}return best}
 function beginDrag(e,item){if(e.button!==undefined&&e.button!==0)return;const o=state.canvas.find(x=>x.id===item.id);if(!o)return;e.preventDefault();e.stopPropagation();const p=canvasPoint(e);drag={id:o.id,offsetX:o.x-p.x,offsetY:o.y-p.y,targetX:o.x,targetY:o.y,pointerId:e.pointerId,lastX:o.x,lastY:o.y,vx:0,vy:0,item};item.classList.add("dragging");try{item.setPointerCapture(e.pointerId)}catch(_){}}
 canvas.addEventListener("pointerdown",e=>{const item=e.target.closest(".item");if(!item||!canvas.contains(item))return;beginDrag(e,item)});
-let suppressChipClick=false;const elementsBox=$("elements");elementsBox.addEventListener("pointerdown",e=>{const chip=e.target.closest(".chip");if(!chip||chip.classList.contains("locked"))return;const name=chip.querySelector(".name")?.textContent;if(!state.owned.has(name))return;e.preventDefault();suppressChipClick=true;pushCanvas(name);const o=state.canvas[state.canvas.length-1];const item=canvas.querySelector(`[data-id="${o.id}"]`);if(item){beginDrag(e,item);drag.offsetX=0;drag.offsetY=0;drag.targetX=drag.lastX=o.x;drag.targetY=drag.lastY=o.y}});
 window.addEventListener("pointermove",e=>{if(!drag||drag.pointerId!==e.pointerId)return;e.preventDefault();const p=canvasPoint(e),o=state.canvas.find(x=>x.id===drag.id);if(!o)return;o.x=clamp(p.x+drag.offsetX,35,Math.max(35,canvas.clientWidth-35));o.y=clamp(p.y+drag.offsetY,40,Math.max(40,canvas.clientHeight-35));drag.targetX=o.x;drag.targetY=o.y;drag.vx=o.x-drag.lastX;drag.vy=o.y-drag.lastY;drag.lastX=o.x;drag.lastY=o.y;drag.item.style.left=o.x+"px";drag.item.style.top=o.y+"px"});
 function finishDrag(e){if(!drag||drag.pointerId!==e.pointerId)return;const active=drag,o=state.canvas.find(x=>x.id===active.id);if(!o){drag=null;return}const p=canvasPoint(e);o.x=clamp(p.x+active.offsetX,35,Math.max(35,canvas.clientWidth-35));o.y=clamp(p.y+active.offsetY,40,Math.max(40,canvas.clientHeight-35));o.vx=reduced?0:active.vx*.12;o.vy=reduced?0:active.vy*.12;const source=active.id;active.item.classList.remove("dragging");drag=null;const panelRect=$(".panel").getBoundingClientRect();if(e.clientX>=panelRect.left&&e.clientX<=panelRect.right&&e.clientY>=panelRect.top&&e.clientY<=panelRect.bottom){addUndo();state.canvas=state.canvas.filter(x=>x.id!==source);save();renderAll();toast("Element removed from canvas.");return}const other=nearestItem(o.x,o.y,source);if(other){combine(o,other);return}renderCanvas()}
 window.addEventListener("pointerup",finishDrag);window.addEventListener("pointercancel",finishDrag);function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
@@ -96,11 +95,53 @@ function openCatalog(){catalogCategory="all";$("catalogSearch").value="";$("cata
 function openBook(){const root=$("recipeList");root.innerHTML="";for(const n of ELEMENTS){if(!state.owned.has(n)){const ready=craftable().includes(n);const row=document.createElement("div");row.className="recipe-row";row.innerHTML='<strong>???</strong> <span class="sub"></span>';row.querySelector(".sub").textContent=ready?"Ready to craft":"";root.appendChild(row);continue}const routes=(BY_ELEMENT[n]||[]).filter(r=>state.routes.has(pairKey(r.a,r.b)+"=>"+n));const row=document.createElement("div");row.className="recipe-row";const title=document.createElement("strong");title.textContent=EMOJI[n]+" "+n+" · "+CATEGORY[n];const count=document.createElement("div");count.className="pairs";count.textContent="Routes found: "+routes.length+"/3";row.append(title,count);if(routes.length){const p=document.createElement("div");p.className="pairs";p.textContent=routes.map(r=>r.a+" + "+r.b).join("  ·  ");row.appendChild(p)}root.appendChild(row)}openModal("bookModal")}
 function resetProgress(){state.owned=new Set(STARTERS);state.routes=new Set();state.order=STARTERS.slice();state.canvas=[];state.craftableMode=false;state.sort="new";state.sound=false;state.theme="auto";state.tutorial=false;undoStack=[];nextId=1;safe(()=>localStorage.removeItem("craftLabSave"));closeModal($("resetModal"));document.documentElement.dataset.theme="";$("soundToggle").checked=false;$("themeSelect").value="auto";save();renderAll();toast("Progress reset. Your four starters are ready.");openModal("tutorialModal");}
 
-let panelDrag=null,suppressPanelClick=false;
-$("elements").addEventListener("pointerdown",e=>{const chip=e.target.closest(".chip:not(.locked)");if(!chip)return;const name=chip.querySelector(".name")?.textContent;if(!name)return;panelDrag={name,x:e.clientX,y:e.clientY,moved:false};});
-document.addEventListener("pointermove",e=>{if(!panelDrag)return;if(Math.hypot(e.clientX-panelDrag.x,e.clientY-panelDrag.y)>8)panelDrag.moved=true});
-document.addEventListener("pointerup",e=>{if(!panelDrag)return;const p=panelDrag;panelDrag=null;if(!p.moved)return;const r=canvas.getBoundingClientRect();if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom){pushCanvas(p.name,e.clientX-r.left,e.clientY-r.top);suppressPanelClick=true;setTimeout(()=>suppressPanelClick=false,100)}});
-$("elements").addEventListener("click",e=>{if(suppressPanelClick){e.preventDefault();return}const chip=e.target.closest(".chip:not(.locked)");if(chip){const n=chip.querySelector(".name")?.textContent;if(n)pushCanvas(n)}});
+/* Single panel gesture handler: a tap creates exactly one item; a drag creates one item and moves it. */
+let panelGesture=null;
+const elementsBox=$("elements");
+elementsBox.addEventListener("pointerdown",e=>{
+  const chip=e.target.closest(".chip:not(.locked)");
+  if(!chip||!elementsBox.contains(chip))return;
+  const name=chip.querySelector(".name")?.textContent;
+  if(!name||!state.owned.has(name))return;
+  if(e.button!==undefined&&e.button!==0)return;
+  e.preventDefault();
+  panelGesture={name,pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,moved:false,itemId:null};
+});
+window.addEventListener("pointermove",e=>{
+  const g=panelGesture;
+  if(!g||g.pointerId!==e.pointerId)return;
+  if(!g.moved&&Math.hypot(e.clientX-g.startX,e.clientY-g.startY)>7){
+    g.moved=true;
+    const p=canvasPoint(e);
+    pushCanvas(g.name,clamp(p.x,35,Math.max(35,canvas.clientWidth-35)),clamp(p.y,40,Math.max(40,canvas.clientHeight-35)));
+    const o=state.canvas[state.canvas.length-1];
+    if(!o||o.el!==g.name){panelGesture=null;return}
+    g.itemId=o.id;
+    const item=canvas.querySelector('[data-id="'+o.id+'"]');
+    if(item){
+      drag={id:o.id,offsetX:0,offsetY:0,targetX:o.x,targetY:o.y,pointerId:e.pointerId,lastX:o.x,lastY:o.y,vx:0,vy:0,item};
+      item.classList.add("dragging");
+    }
+  }
+  if(g.moved&&drag&&drag.pointerId===e.pointerId){
+    e.preventDefault();
+    const p=canvasPoint(e),o=state.canvas.find(x=>x.id===drag.id);
+    if(!o)return;
+    o.x=clamp(p.x,35,Math.max(35,canvas.clientWidth-35));
+    o.y=clamp(p.y,40,Math.max(40,canvas.clientHeight-35));
+    drag.targetX=drag.lastX=o.x;drag.targetY=drag.lastY=o.y;
+    drag.item.style.left=o.x+"px";drag.item.style.top=o.y+"px";
+  }
+},{passive:false});
+window.addEventListener("pointerup",e=>{
+  const g=panelGesture;
+  if(!g||g.pointerId!==e.pointerId)return;
+  panelGesture=null;
+  if(!g.moved)pushCanvas(g.name);
+});
+window.addEventListener("pointercancel",e=>{
+  if(panelGesture&&panelGesture.pointerId===e.pointerId)panelGesture=null;
+});
 $("craftToggle").addEventListener("change",e=>{state.craftableMode=e.target.checked;save();renderPanel()});
 $("search").addEventListener("input",renderPanel);
 $("sort").addEventListener("change",e=>{state.sort=e.target.value;save();renderPanel()});
