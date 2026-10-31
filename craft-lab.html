@@ -18,7 +18,7 @@ main{height:calc(100dvh - 120px);min-height:0;display:flex;flex-direction:column
 @media(min-width:801px){main{height:calc(100dvh - 66px);flex-direction:row}.canvas-wrap{border-bottom:0;border-right:1px solid var(--line);min-width:0}.panel{width:340px;height:auto;max-height:none;min-height:0;flex:none}.elements{align-content:flex-start}.catalog-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}}
 @media(max-width:520px){main{height:calc(100dvh - 165px);min-height:0}header{padding:9px 10px;gap:7px;min-height:62px}.top-instagram{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border-radius:11px;background:var(--accent2);color:var(--accent)}header h1{font-size:18px}.toolbar{gap:5px}.toolbar button{padding:7px 9px;font-size:12px}.counter{font-size:12px}.canvas-wrap{flex:0 0 clamp(310px,48vh,440px);min-height:310px}.panel{flex:1 1 auto;height:auto;min-height:180px;max-height:none}.panel-head{padding:8px 9px}.panel-tools input{width:120px}.panel-tools select{max-width:115px}.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-item{min-width:0}.catalog-item .nm{font-size:12px}.dialog{padding:13px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
-</style></head><body>
+.elements .chip{position:relative;padding-right:38px}.add-icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:25px;height:25px;border-radius:8px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:21px;font-weight:500;line-height:1;box-shadow:0 2px 8px color-mix(in srgb,var(--accent) 30%,transparent)}#craftCanvas{touch-action:none;user-select:none;-webkit-user-select:none}.item{touch-action:none;-webkit-user-select:none;user-select:none}</style></head><body>
 <header><div class="brand"><div class="mark">⚗️</div><h1>Craft Lab</h1></div><a class="top-instagram" href="https://www.instagram.com/_ayush_045__/" target="_blank" rel="noopener noreferrer" aria-label="Open Instagram profile @_ayush_045__"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="18" cy="6" r="1" fill="currentColor" stroke="none"></circle></svg></a><div class="counter" id="foundCount">4 / 354</div><div class="toolbar"><button id="allBtn">All items</button><button id="bookBtn">Recipe book</button><button id="settingsBtn" aria-label="Settings">⚙</button><button id="aboutBtn" aria-label="About">ⓘ</button></div></header>
 <main><section class="canvas-wrap" id="canvasWrap" aria-label="Crafting canvas"><div class="canvas-actions"><button id="hintBtn">Hint ✨</button><button id="undoBtn" disabled>Undo</button><button id="clearBtn">Clear canvas</button></div><div id="craftCanvas"></div><div class="canvas-hint" id="emptyHint"><strong>Your lab is ready</strong>Tap an element below to place it here, then drag it onto another.</div></section>
 <section class="panel"><div class="panel-head"><h2 id="panelTitle">Discovered elements</h2><label class="toggle"><input id="craftToggle" type="checkbox">Craftable now</label><div class="panel-tools"><input id="search" type="search" placeholder="Search discovered…" aria-label="Search discovered elements"><select id="sort" aria-label="Sort elements"><option value="new">Newest first</option><option value="az">A to Z</option><option value="cat">By category</option></select></div></div><div class="craft-count" id="craftCount" aria-live="polite"></div><div class="elements" id="elements"></div></section></main>
@@ -59,12 +59,13 @@ function owns(a,b){return state.owned.has(a)&&state.owned.has(b)}
 function craftable(){const out=[];for(const el of ELEMENTS){if(state.owned.has(el))continue;const rs=BY_ELEMENT[el]||[];if(rs.some(r=>owns(r.a,r.b)))out.push(el)}return out}
 function routesFound(el){return [...state.routes].filter(k=>k.endsWith("=>"+el)).length}
 function addUndo(){undoStack.push(state.canvas.map(o=>({...o})));if(undoStack.length>10)undoStack.shift();$("undoBtn").disabled=!undoStack.length}
-function pushCanvas(el,x,y){if(state.canvas.length>=60){toast("Canvas full — clear some space first.");return}const rect=canvas.getBoundingClientRect();state.canvas.push({id:nextId++,el,x:x??rect.width*(.25+Math.random()*.5),y:y??rect.height*(.25+Math.random()*.5),vx:0,vy:0,scale:1,badge:false});renderCanvas()}
+function pushCanvas(el,x,y){if(state.canvas.length>=60){toast("Canvas full — clear some space first.");return}const rect=canvas.getBoundingClientRect(),pad=58;const rx=pad+Math.random()*Math.max(1,rect.width-pad*2),ry=pad+Math.random()*Math.max(1,rect.height-pad*2);state.canvas.push({id:nextId++,el,x:x??rx,y:y??ry,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,scale:1,badge:false});renderCanvas()}
 function discover(el,recipe){if(!state.owned.has(el)){state.owned.add(el);state.order.push(el);const newest=state.canvas[state.canvas.length-1];if(newest&&newest.el===el)newest.badge=true;toast("New discovery: "+EMOJI[el]+" "+el+"!");tone(790)}const route=pairKey(recipe.a,recipe.b)+"=>"+el;state.routes.add(route);save();renderAll()}
 function renderCanvas(){canvas.innerHTML="";for(const o of state.canvas){const el=document.createElement("div");el.className="item"+(drag?.id===o.id?" dragging":"");el.dataset.id=o.id;el.style.left=o.x+"px";el.style.top=o.y+"px";el.style.transform=`translate(-50%,-50%) scale(${o.scale||1})`;el.style.setProperty("--tint",tint[CATEGORY[o.el]]||"#aaa");el.setAttribute("role","button");el.setAttribute("tabindex","0");el.setAttribute("aria-label",o.el+" on canvas. Drag to combine.");el.innerHTML=`<span class="emoji">${EMOJI[o.el]||"✨"}</span><span class="name"></span>${o.badge?'<span class="newtag">NEW</span>':""}`;el.querySelector(".name").textContent=o.el;canvas.appendChild(el)}$("emptyHint").style.display=state.canvas.length?"none":"block"}
 function renderPanel(){const craft=craftable(),box=$("elements"),q=$("search").value.trim().toLowerCase();$("foundCount").textContent=state.owned.size+" / 354";$("craftToggle").checked=state.craftableMode;$("panelTitle").textContent=state.craftableMode?"Craftable elements":"Discovered elements";$("search").style.display=state.craftableMode?"none":"";$("sort").value=state.sort;$("craftCount").textContent=craft.length+" new items craftable now";box.innerHTML="";
-if(state.craftableMode){if(!craft.length){box.innerHTML='<div class="empty">No new combinations are ready yet. Start with these four elements:</div>';for(const name of STARTERS){const b=document.createElement("button");b.className="chip";b.style.setProperty("--tint",tint[CATEGORY[name]]||"#aaa");b.innerHTML=`<span class="emoji">${EMOJI[name]}</span><span class="name"></span>`;b.querySelector(".name").textContent=name;b.onclick=()=>pushCanvas(name);box.appendChild(b)}return}box.innerHTML='<div class="section-title">Craftable</div>';for(const name of sortNames(craft)){const b=document.createElement("button");b.className="chip locked";b.style.setProperty("--tint",tint[CATEGORY[name]]||"#aaa");b.innerHTML='<span>🔒</span><span class="name"></span>';b.querySelector(".name").textContent="??? ("+CATEGORY[name]+")";b.onclick=()=>toast("You can make something new in "+CATEGORY[name]+". Try combining your elements.");box.appendChild(b)}return}
-let list=[...state.owned].filter(x=>x.toLowerCase().includes(q));if(state.sort==="new")list.sort((a,b)=>state.order.indexOf(b)-state.order.indexOf(a));else list=sortNames(list);for(const name of list){const b=document.createElement("button");b.className="chip";b.style.setProperty("--tint",tint[CATEGORY[name]]||"#aaa");b.draggable=false;b.innerHTML=`<span class="emoji">${EMOJI[name]}</span><span class="name"></span><span class="route-count"></span>`;b.querySelector(".name").textContent=name;b.querySelector(".route-count").textContent=routesFound(name)+"/3";b.querySelector(".route-count").style.cssText="font-size:10px;color:var(--muted);font-weight:600";box.appendChild(b)}}
+const makeChip=(name,locked=false)=>{const b=document.createElement("button");b.type="button";b.className="chip"+(locked?" locked":"");b.style.setProperty("--tint",tint[CATEGORY[name]]||"#aaa");b.innerHTML=locked?'<span class="emoji">🔒</span><span class="name"></span>':'<span class="emoji"></span><span class="name"></span><span class="route-count"></span><span class="add-icon" aria-hidden="true">+</span>';b.querySelector(".name").textContent=locked?"??? ("+CATEGORY[name]+")":name;if(!locked){b.querySelector(".emoji").textContent=EMOJI[name]||"✨";b.querySelector(".route-count").textContent=routesFound(name)+"/3";b.setAttribute("aria-label","Add "+name+" to canvas");}else b.onclick=()=>toast("You can make something new in "+CATEGORY[name]+". Try combining your elements.");box.appendChild(b)};
+if(state.craftableMode){if(!craft.length){box.innerHTML='<div class="empty">No new combinations are ready yet. Start with these four elements:</div>';for(const name of STARTERS)makeChip(name);return}box.innerHTML='<div class="section-title">Craftable</div>';for(const name of sortNames(craft))makeChip(name,true);return}
+let list=[...state.owned].filter(x=>x.toLowerCase().includes(q));if(state.sort==="new")list.sort((a,b)=>state.order.indexOf(b)-state.order.indexOf(a));else list=sortNames(list);for(const name of list)makeChip(name)}
 function sortNames(arr){return [...arr].sort((a,b)=>state.sort==="cat"?(CATEGORY[a]||"").localeCompare(CATEGORY[b]||"")||a.localeCompare(b):a.localeCompare(b))}
 function renderAll(){renderPanel();renderCanvas();$("undoBtn").disabled=!undoStack.length||combining;if(state.owned.size===354)toast("🎉 All 354 elements discovered!")}
 function canvasPoint(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
@@ -95,52 +96,12 @@ function openCatalog(){catalogCategory="all";$("catalogSearch").value="";$("cata
 function openBook(){const root=$("recipeList");root.innerHTML="";for(const n of ELEMENTS){if(!state.owned.has(n)){const ready=craftable().includes(n);const row=document.createElement("div");row.className="recipe-row";row.innerHTML='<strong>???</strong> <span class="sub"></span>';row.querySelector(".sub").textContent=ready?"Ready to craft":"";root.appendChild(row);continue}const routes=(BY_ELEMENT[n]||[]).filter(r=>state.routes.has(pairKey(r.a,r.b)+"=>"+n));const row=document.createElement("div");row.className="recipe-row";const title=document.createElement("strong");title.textContent=EMOJI[n]+" "+n+" · "+CATEGORY[n];const count=document.createElement("div");count.className="pairs";count.textContent="Routes found: "+routes.length+"/3";row.append(title,count);if(routes.length){const p=document.createElement("div");p.className="pairs";p.textContent=routes.map(r=>r.a+" + "+r.b).join("  ·  ");row.appendChild(p)}root.appendChild(row)}openModal("bookModal")}
 function resetProgress(){state.owned=new Set(STARTERS);state.routes=new Set();state.order=STARTERS.slice();state.canvas=[];state.craftableMode=false;state.sort="new";state.sound=false;state.theme="auto";state.tutorial=false;undoStack=[];nextId=1;safe(()=>localStorage.removeItem("craftLabSave"));closeModal($("resetModal"));document.documentElement.dataset.theme="";$("soundToggle").checked=false;$("themeSelect").value="auto";save();renderAll();toast("Progress reset. Your four starters are ready.");openModal("tutorialModal");}
 
-/* Single panel gesture handler: a tap creates exactly one item; a drag creates one item and moves it. */
-let panelGesture=null;
-const elementsBox=$("elements");
-elementsBox.addEventListener("pointerdown",e=>{
-  const chip=e.target.closest(".chip:not(.locked)");
-  if(!chip||!elementsBox.contains(chip))return;
-  const name=chip.querySelector(".name")?.textContent;
-  if(!name||!state.owned.has(name))return;
-  if(e.button!==undefined&&e.button!==0)return;
-  e.preventDefault();
-  panelGesture={name,pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,moved:false,itemId:null};
-});
-window.addEventListener("pointermove",e=>{
-  const g=panelGesture;
-  if(!g||g.pointerId!==e.pointerId)return;
-  if(!g.moved&&Math.hypot(e.clientX-g.startX,e.clientY-g.startY)>7){
-    g.moved=true;
-    const p=canvasPoint(e);
-    pushCanvas(g.name,clamp(p.x,35,Math.max(35,canvas.clientWidth-35)),clamp(p.y,40,Math.max(40,canvas.clientHeight-35)));
-    const o=state.canvas[state.canvas.length-1];
-    if(!o||o.el!==g.name){panelGesture=null;return}
-    g.itemId=o.id;
-    const item=canvas.querySelector('[data-id="'+o.id+'"]');
-    if(item){
-      drag={id:o.id,offsetX:0,offsetY:0,targetX:o.x,targetY:o.y,pointerId:e.pointerId,lastX:o.x,lastY:o.y,vx:0,vy:0,item};
-      item.classList.add("dragging");
-    }
-  }
-  if(g.moved&&drag&&drag.pointerId===e.pointerId){
-    e.preventDefault();
-    const p=canvasPoint(e),o=state.canvas.find(x=>x.id===drag.id);
-    if(!o)return;
-    o.x=clamp(p.x,35,Math.max(35,canvas.clientWidth-35));
-    o.y=clamp(p.y,40,Math.max(40,canvas.clientHeight-35));
-    drag.targetX=drag.lastX=o.x;drag.targetY=drag.lastY=o.y;
-    drag.item.style.left=o.x+"px";drag.item.style.top=o.y+"px";
-  }
-},{passive:false});
-window.addEventListener("pointerup",e=>{
-  const g=panelGesture;
-  if(!g||g.pointerId!==e.pointerId)return;
-  panelGesture=null;
-  if(!g.moved)pushCanvas(g.name);
-});
-window.addEventListener("pointercancel",e=>{
-  if(panelGesture&&panelGesture.pointerId===e.pointerId)panelGesture=null;
+/* One tap handler for the plus plates; no competing pointer/click handlers. */
+$("elements").addEventListener("click",e=>{
+ const chip=e.target.closest(".chip:not(.locked)");
+ if(!chip)return;
+ const name=chip.querySelector(".name")?.textContent;
+ if(name&&state.owned.has(name))pushCanvas(name);
 });
 $("craftToggle").addEventListener("change",e=>{state.craftableMode=e.target.checked;save();renderPanel()});
 $("search").addEventListener("input",renderPanel);
